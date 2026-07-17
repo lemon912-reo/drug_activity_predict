@@ -2,11 +2,10 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
+import requests
 
-from chembl_webresource_client.new_client import new_client
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
-
 
 
 # =====================================================
@@ -29,15 +28,13 @@ st.markdown(
 <style>
 
 .main {
-    background-color: #f7fbfc;
+    background-color:#f7fbfc;
 }
-
 
 h1 {
     color:#075985;
     font-weight:800;
 }
-
 
 h2 {
     color:#0f766e;
@@ -48,17 +45,13 @@ h2 {
 
     width:100%;
     height:45px;
-
     border-radius:10px;
 
     background-color:#0f766e;
-
     color:white;
 
     font-size:16px;
-
     font-weight:bold;
-
 }
 
 
@@ -72,7 +65,6 @@ h2 {
 div[data-testid="stMetric"] {
 
     background-color:white;
-
     border-radius:15px;
 
     padding:20px;
@@ -98,7 +90,6 @@ margin-bottom:20px;
 
 }
 
-
 </style>
 
 """,
@@ -108,15 +99,12 @@ unsafe_allow_html=True
 
 
 # =====================================================
-# 모델 및 ChEMBL 연결
+# 모델 불러오기
 # =====================================================
 
 model = joblib.load(
     "drug_activity_model.pkl"
 )
-
-
-molecule = new_client.molecule
 
 
 
@@ -128,17 +116,32 @@ def get_smiles(chembl_id):
 
     try:
 
-        mol = molecule.get(
-            chembl_id
+        url = (
+            f"https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}.json"
         )
 
 
-        if mol.get("molecule_structures") is None:
+        response = requests.get(
+            url,
+            timeout=10
+        )
+
+
+        if response.status_code != 200:
 
             return None
 
 
-        return mol["molecule_structures"]["canonical_smiles"]
+        mol = response.json()
+
+
+        smiles = (
+            mol.get("molecule_structures", {})
+            .get("canonical_smiles")
+        )
+
+
+        return smiles
 
 
     except:
@@ -155,15 +158,40 @@ def search_chembl_id(name):
 
     try:
 
-        result = molecule.search(name)
+        url = (
+            "https://www.ebi.ac.uk/chembl/api/data/molecule.json"
+            f"?molecule_synonyms__molecule_synonym__icontains={name}"
+        )
 
 
-        if len(result)==0:
+        response=requests.get(
+            url,
+            timeout=10
+        )
+
+
+        if response.status_code != 200:
 
             return None
 
 
-        return result[0]["molecule_chembl_id"]
+        data=response.json()
+
+
+        molecules=data.get(
+            "molecules",
+            []
+        )
+
+
+        if len(molecules)==0:
+
+            return None
+
+
+        return molecules[0].get(
+            "molecule_chembl_id"
+        )
 
 
     except:
@@ -173,7 +201,7 @@ def search_chembl_id(name):
 
 
 # =====================================================
-# SMILES → Fingerprint
+# SMILES → Morgan Fingerprint
 # =====================================================
 
 def smiles_to_fp(smiles):
@@ -209,6 +237,8 @@ def smiles_to_fp(smiles):
 
     return arr
 
+
+
 # =====================================================
 # AI 예측
 # =====================================================
@@ -236,6 +266,7 @@ def predict_pIC50(chembl_id):
         return None,smiles
 
 
+
     X=np.array(fp).reshape(
         1,-1
     )
@@ -251,7 +282,7 @@ def predict_pIC50(chembl_id):
 
 
 # =====================================================
-# 활성 등급
+# 추천 등급
 # =====================================================
 
 def recommendation(score):
@@ -277,32 +308,30 @@ def recommendation(score):
 with st.sidebar:
 
 
-    st.header("🧬 AI Drug Discovery")
+    st.header(
+        "🧬 AI Drug Discovery"
+    )
 
 
     st.write(
 """
-**Target**
+### Target
 
-🎯 MMP13
+🎯 MMP13  
+(CHEMBL280)
 
 
-**Disease**
+### Disease
 
 🩺 Breast Cancer
 
 
-**Model**
+### Model
 
 🤖 Random Forest Regression
 
 
-**Input**
-
-Chemical Structure
-
-
-**Output**
+### Output
 
 Predicted pIC50
 
@@ -320,7 +349,7 @@ Predicted pIC50
 
 
 # =====================================================
-# Main Title
+# Main
 # =====================================================
 
 
@@ -328,7 +357,7 @@ st.markdown(
 """
 # 🧬 AI 유방암 억제 후보 물질 예측
 
-## MMP13 Target-based Breast Cancer Candidate Screening
+## MMP13 Target-based Candidate Screening
 
 """
 )
@@ -341,7 +370,8 @@ st.markdown(
 
 <b>🔬 연구 목적</b>
 
-유방암 관련 표적 유전자 MMP13을 대상으로 화합물의 분자 구조 정보를 분석하고 
+유방암 관련 표적 단백질 MMP13을 대상으로
+화합물의 분자 구조 정보를 분석하고,
 AI 모델을 활용하여 예상 활성도(pIC50)를 예측합니다.
 
 </div>
@@ -352,11 +382,7 @@ unsafe_allow_html=True
 
 
 
-# =====================================================
-# 분석 방법 선택
-# =====================================================
-
-mode = st.radio(
+mode=st.radio(
     "분석 방법 선택",
     [
         "후보 약물 리스트 비교",
@@ -370,12 +396,11 @@ mode = st.radio(
 # 1. 후보군 비교
 # =====================================================
 
-
 if mode=="후보 약물 리스트 비교":
 
 
     st.subheader(
-        "📋 후보 화합물 Screening"
+        "📋 Candidate Screening"
     )
 
 
@@ -398,6 +423,7 @@ if mode=="후보 약물 리스트 비교":
         )
 
 
+
         if st.button(
             "AI Screening 실행"
         ):
@@ -406,25 +432,29 @@ if mode=="후보 약물 리스트 비교":
             results=[]
 
 
-            for chembl_id in candidate["molecule_chembl_id"]:
+            with st.spinner(
+                "분자 구조 분석 및 pIC50 예측 중..."
+            ):
 
 
-                score,smiles=predict_pIC50(
-                    chembl_id
-                )
+                for chembl_id in candidate["molecule_chembl_id"]:
 
 
-                if score is not None:
-
-
-                    results.append(
-                    {
-                    "molecule_chembl_id":chembl_id,
-                    "Predicted_pIC50":round(score,3),
-                    "Recommendation":recommendation(score)
-                    }
+                    score,smiles=predict_pIC50(
+                        chembl_id
                     )
 
+
+                    if score is not None:
+
+
+                        results.append(
+                        {
+                        "molecule_chembl_id":chembl_id,
+                        "Predicted_pIC50":round(score,3),
+                        "Recommendation":recommendation(score)
+                        }
+                        )
 
 
             result_df=pd.DataFrame(
@@ -467,7 +497,7 @@ else:
 
 
     st.subheader(
-        "🔍 Candidate Molecule Search"
+        "🔍 Molecule Search"
     )
 
 
@@ -498,6 +528,7 @@ else:
                 user_input
             )
 
+
         else:
 
             chembl_id=user_input
@@ -520,7 +551,6 @@ else:
             )
 
 
-
             if score is None:
 
 
@@ -537,9 +567,8 @@ else:
                 )
 
 
-
                 st.subheader(
-                    "📊 AI Prediction Result"
+                    "📊 Prediction Result"
                 )
 
 
@@ -575,11 +604,12 @@ else:
                     "🧬 Molecular Information"
                 )
 
-                st.write("**SMILES Structure**")
 
-                st.code(
-                        smiles
+                st.write(
+                    "SMILES Structure"
                 )
 
 
-        
+                st.code(
+                    smiles
+                )
