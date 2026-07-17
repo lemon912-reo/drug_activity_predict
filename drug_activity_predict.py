@@ -272,7 +272,7 @@ st.markdown(
 <div class="hero">
 
 <h1>
-🧬 AI Drug Discovery Platform
+🧬 AI 기반 신약 후보 물질 예측 시스템
 </h1>
 
 <h3>
