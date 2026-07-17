@@ -23,29 +23,23 @@ st.markdown(
 """
 <style>
 
+
 /* 전체 배경 */
+
 .stApp {
 
 background:
 linear-gradient(
 135deg,
-rgba(240,248,250,0.95),
-rgba(255,255,255,0.95)
+#f0f8fa,
+#ffffff
 );
 
 }
 
 
-/* 상단 영역 */
-.block-container {
-
-padding-top:2rem;
-
-}
-
-
-
 /* 제목 */
+
 h1 {
 
 color:#075985;
@@ -61,87 +55,139 @@ color:#0f766e;
 }
 
 
-/* 카드 디자인 */
+
+/* Hero Banner */
+
+.hero {
+
+
+background:
+
+linear-gradient(
+90deg,
+rgba(7,89,133,0.9),
+rgba(15,118,110,0.85)
+),
+
+url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
+
+
+background-size:cover;
+
+background-position:center;
+
+
+padding:40px;
+
+border-radius:25px;
+
+
+color:white;
+
+
+margin-bottom:25px;
+
+
+box-shadow:
+
+0px 10px 25px rgba(0,0,0,0.15);
+
+
+}
+
+
+
+.hero h1 {
+
+color:white;
+
+font-size:38px;
+
+}
+
+
+.hero h3 {
+
+color:#dbeafe;
+
+}
+
+
+.hero p {
+
+font-size:18px;
+
+}
+
+
+
+/* 카드 */
 
 .card {
 
+
 background:
+
 linear-gradient(
 135deg,
 #ffffff,
 #f8fafc
 );
 
+
 padding:20px;
+
 
 border-radius:20px;
 
+
 border:1px solid #dbeafe;
 
+
 box-shadow:
+
 0px 8px 20px rgba(15,118,110,0.12);
 
+
 text-align:center;
+
 
 }
 
 
-
-/* 카드 제목 */
 
 .card h3 {
 
 color:#075985;
 
-margin-bottom:10px;
-
-}
-
-
-/* 강조 숫자 */
-
-.card h4 {
-
-color:#0f766e;
-
 }
 
 
 
-/* 표 디자인 */
+/* 표 */
 
 [data-testid="stDataFrame"] {
 
+
 border-radius:15px;
 
+
 box-shadow:
+
 0px 5px 15px rgba(0,0,0,0.08);
+
 
 }
 
 
 
-/* 사이드바 */
+/* Sidebar */
 
 section[data-testid="stSidebar"] {
 
+
 background-color:#f0fdfa;
 
-}
-
-
-
-/* 버튼 */
-
-.stButton button {
-
-background-color:#0f766e;
-
-color:white;
-
-border-radius:12px;
-
-font-weight:bold;
 
 }
 
@@ -288,35 +334,7 @@ font-size:18px;
 # =====================================
 # Title
 # =====================================
-st.markdown(
-"""
-<div style="
-background:
-linear-gradient(
-90deg,
-rgba(7,89,133,0.85),
-rgba(15,118,110,0.85)
-);
 
-padding:35px;
-border-radius:20px;
-color:white;
-margin-bottom:25px;
-">
-
-<h1 style="color:white;">
-🧬 AI Drug Discovery Platform
-</h1>
-
-<p style="font-size:20px;">
-MMP13 Target-based Breast Cancer Candidate Screening
-</p>
-
-
-</div>
-""",
-unsafe_allow_html=True
-)
 
 st.markdown(
 """
