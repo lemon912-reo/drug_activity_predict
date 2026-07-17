@@ -23,53 +23,54 @@ st.markdown(
 """
 <style>
 
-
 /* 전체 배경 */
-
-.main {
+.stApp {
 
 background:
 linear-gradient(
 135deg,
-#f7fbfc 0%,
-#e6f4f1 50%,
-#eff6ff 100%
+rgba(240,248,250,0.95),
+rgba(255,255,255,0.95)
 );
+
+}
+
+
+/* 상단 영역 */
+.block-container {
+
+padding-top:2rem;
 
 }
 
 
 
 /* 제목 */
-
 h1 {
 
 color:#075985;
-
-font-weight:900;
-
-letter-spacing:-1px;
+font-weight:800;
 
 }
-
 
 
 h2 {
 
 color:#0f766e;
 
-font-weight:700;
-
 }
 
 
-
-/* 카드 */
+/* 카드 디자인 */
 
 .card {
 
 background:
-rgba(255,255,255,0.85);
+linear-gradient(
+135deg,
+#ffffff,
+#f8fafc
+);
 
 padding:20px;
 
@@ -77,16 +78,10 @@ border-radius:20px;
 
 border:1px solid #dbeafe;
 
-
 box-shadow:
-
-0px 8px 20px rgba(0,0,0,0.08);
-
+0px 8px 20px rgba(15,118,110,0.12);
 
 text-align:center;
-
-backdrop-filter:blur(5px);
-
 
 }
 
@@ -98,29 +93,29 @@ backdrop-filter:blur(5px);
 
 color:#075985;
 
-margin:8px;
+margin-bottom:10px;
 
 }
 
 
+/* 강조 숫자 */
 
 .card h4 {
 
 color:#0f766e;
 
-margin:0;
-
 }
 
 
 
-/* 데이터프레임 */
+/* 표 디자인 */
 
 [data-testid="stDataFrame"] {
 
 border-radius:15px;
 
-overflow:hidden;
+box-shadow:
+0px 5px 15px rgba(0,0,0,0.08);
 
 }
 
@@ -130,13 +125,23 @@ overflow:hidden;
 
 section[data-testid="stSidebar"] {
 
-background:
+background-color:#f0fdfa;
 
-linear-gradient(
-180deg,
-#ecfeff,
-#f8fafc
-);
+}
+
+
+
+/* 버튼 */
+
+.stButton button {
+
+background-color:#0f766e;
+
+color:white;
+
+border-radius:12px;
+
+font-weight:bold;
 
 }
 
@@ -147,7 +152,6 @@ linear-gradient(
 """,
 unsafe_allow_html=True
 )
-
 
 # =====================================
 # Data
@@ -284,7 +288,35 @@ font-size:18px;
 # =====================================
 # Title
 # =====================================
+st.markdown(
+"""
+<div style="
+background:
+linear-gradient(
+90deg,
+rgba(7,89,133,0.85),
+rgba(15,118,110,0.85)
+);
 
+padding:35px;
+border-radius:20px;
+color:white;
+margin-bottom:25px;
+">
+
+<h1 style="color:white;">
+🧬 AI Drug Discovery Platform
+</h1>
+
+<p style="font-size:20px;">
+MMP13 Target-based Breast Cancer Candidate Screening
+</p>
+
+
+</div>
+""",
+unsafe_allow_html=True
+)
 
 st.markdown(
 """
