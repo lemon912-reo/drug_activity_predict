@@ -121,7 +121,7 @@ def get_smiles(chembl_id):
         )
 
 
-        response = requests.get(
+        response=requests.get(
             url,
             timeout=10
         )
@@ -132,19 +132,25 @@ def get_smiles(chembl_id):
             return None
 
 
-        mol = response.json()
+        mol=response.json()
 
 
-        smiles = (
-            mol.get("molecule_structures", {})
-            .get("canonical_smiles")
+        structures=mol.get(
+            "molecule_structures"
         )
 
 
-        return smiles
+        if structures is None:
+
+            return None
 
 
-    except:
+        return structures.get(
+            "canonical_smiles"
+        )
+
+
+    except Exception as e:
 
         return None
 
@@ -160,7 +166,7 @@ def search_chembl_id(name):
 
         url = (
             "https://www.ebi.ac.uk/chembl/api/data/molecule.json"
-            f"?molecule_synonyms__molecule_synonym__icontains={name}"
+            f"?pref_name__icontains={name}"
         )
 
 
@@ -194,7 +200,9 @@ def search_chembl_id(name):
         )
 
 
-    except:
+    except Exception as e:
+
+        st.write(e)
 
         return None
 
