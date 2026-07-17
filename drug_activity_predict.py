@@ -54,8 +54,6 @@ box-shadow:
 
 text-align:center;
 
-height:200px;
-
 }
 
 
