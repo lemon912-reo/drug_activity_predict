@@ -256,31 +256,7 @@ def grade(x):
     else:
         return "추가 검토"
 
-
-
-url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
-
-
-background-size:cover;
-
-background-position:center;
-
-
-padding:45px;
-
-border-radius:25px;
-
-color:white;
-
-margin-bottom:25px;
-
-box-shadow:
-
-0px 10px 25px rgba(0,0,0,0.15);
-
 }
-
-
 
 
 # =====================================
