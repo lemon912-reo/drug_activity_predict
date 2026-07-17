@@ -54,7 +54,7 @@ box-shadow:
 
 text-align:center;
 
-height:150px;
+height:200px;
 
 }
 
@@ -402,7 +402,7 @@ f"""
 가장 높은 예측 활성도를 보인 후보 물질은 <b>{best['molecule_chembl_id']}</b>이며, 예측 pIC50 값은 <b>{best['Predicted_pIC50']:.3f}</b>입니다.
 
 
-AI 모델 기반 분석 결과, 해당 화합물이 MMP13 억제 후보 물질로서 가장 높은 우선순위를 가집니다. <br>
+AI 모델 기반 분석 결과, 해당 화합물이 MMP13 억제 후보 물질로서 가장 높은 우선순위를 가집니다. 
 
 
 </div>
