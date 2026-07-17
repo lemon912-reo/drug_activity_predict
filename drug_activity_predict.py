@@ -3,9 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# =========================
-# 페이지 설정
-# =========================
+# ==============================
+# Page Setting
+# ==============================
 
 st.set_page_config(
     page_title="AI Drug Discovery",
@@ -14,13 +14,143 @@ st.set_page_config(
 )
 
 
-# =========================
-# 데이터
-# =========================
+# ==============================
+# CSS
+# ==============================
 
-data = {
+st.markdown(
+"""
+<style>
 
-"Rank": range(1,21),
+.main {
+    background-color:#f7fbfc;
+}
+
+
+h1 {
+    color:#075985;
+    font-weight:800;
+}
+
+
+h2 {
+    color:#0f766e;
+}
+
+
+.card {
+
+background:white;
+
+padding:20px;
+
+border-radius:15px;
+
+box-shadow:
+0px 4px 12px rgba(0,0,0,0.08);
+
+margin-bottom:20px;
+
+}
+
+
+.rank-card {
+
+background:white;
+
+padding:15px;
+
+border-radius:12px;
+
+box-shadow:
+0px 3px 10px rgba(0,0,0,0.08);
+
+text-align:center;
+
+}
+
+
+</style>
+
+""",
+unsafe_allow_html=True
+)
+
+
+
+# ==============================
+# Title
+# ==============================
+
+st.markdown(
+"""
+# 🧬 AI Drug Discovery Platform
+
+## MMP13 Target-based Breast Cancer Candidate Screening
+
+"""
+)
+
+
+
+st.markdown(
+"""
+<div class="card">
+
+<b>🔬 Research Goal</b>
+
+<br><br>
+
+유방암 관련 표적 단백질 MMP13에 작용하는 후보 화합물을 대상으로  
+분자 구조 정보를 기반으로 학습한 Random Forest 모델을 활용하여  
+예상 활성도(pIC50)를 예측하고 후보 물질의 우선순위를 평가합니다.
+
+</div>
+
+""",
+unsafe_allow_html=True
+)
+
+
+
+# ==============================
+# Model Information
+# ==============================
+
+col1,col2,col3 = st.columns(3)
+
+
+with col1:
+    st.metric(
+        "Target",
+        "MMP13"
+    )
+
+
+with col2:
+    st.metric(
+        "Disease",
+        "Breast Cancer"
+    )
+
+
+with col3:
+    st.metric(
+        "Model",
+        "Random Forest"
+    )
+
+
+
+# ==============================
+# Result Data
+# ==============================
+
+
+result = pd.DataFrame({
+
+"Rank":
+range(1,21),
 
 "molecule_chembl_id":[
 "CHEMBL440498",
@@ -45,37 +175,33 @@ data = {
 "CHEMBL178652"
 ],
 
+
 "Predicted_pIC50":[
-8.805148,
-7.412523,
-7.238074,
-7.238074,
-7.234005,
-7.181533,
-7.160186,
-7.160096,
-7.152552,
-7.152552,
-7.127812,
-7.118701,
-7.104347,
-7.066805,
-7.058666,
-7.020028,
-6.994926,
-6.570654,
-6.542371,
-6.357642
+8.805,
+7.413,
+7.238,
+7.238,
+7.234,
+7.182,
+7.160,
+7.160,
+7.153,
+7.153,
+7.128,
+7.119,
+7.104,
+7.067,
+7.059,
+7.020,
+6.995,
+6.571,
+6.542,
+6.358
 ]
 
-}
 
+})
 
-df=pd.DataFrame(data)
-
-
-
-# 등급
 
 def grade(x):
 
@@ -90,38 +216,14 @@ def grade(x):
 
 
 
-df["Recommendation"] = df["Predicted_pIC50"].apply(grade)
+result["Recommendation"] = result["Predicted_pIC50"].apply(grade)
 
 
 
-# =========================
-# 제목
-# =========================
+# ==============================
+# Ranking Table
+# ==============================
 
-st.title(
-"🧬 AI Drug Discovery Platform"
-)
-
-
-st.subheader(
-"MMP13 Target-based Breast Cancer Candidate Screening"
-)
-
-
-
-st.info(
-"""
-MMP13 표적 단백질 관련 후보 화합물 20개를 대상으로
-Random Forest 기반 AI 모델이 예상 활성도(pIC50)를 예측하고
-후보 물질의 우선순위를 평가합니다.
-"""
-)
-
-
-
-# =========================
-# 전체 결과
-# =========================
 
 st.subheader(
 "🏆 AI Prediction Ranking"
@@ -129,72 +231,155 @@ st.subheader(
 
 
 st.dataframe(
-df,
-use_container_width=True
+    result,
+    use_container_width=True,
+    hide_index=True
 )
 
 
 
-# =========================
-# Top5
-# =========================
+# ==============================
+# Top 5 Cards
+# ==============================
+
 
 st.subheader(
-"📊 Top 5 Candidate Visualization"
+"🥇 Top 5 Candidate Molecules"
 )
 
 
-top5=df.head(5)
+top5=result.head(5)
 
 
 
-fig,ax=plt.subplots(figsize=(7,3))
+cols=st.columns(5)
 
 
-ax.bar(
-    top5["molecule_chembl_id"],
-    top5["Predicted_pIC50"]
+for i,(_,row) in enumerate(top5.iterrows()):
+
+    with cols[i]:
+
+        st.markdown(
+        f"""
+
+        <div class="rank-card">
+
+        🏆 Rank {row['Rank']}
+
+        <br><br>
+
+        <b>{row['molecule_chembl_id']}</b>
+
+        <br><br>
+
+        pIC50
+
+        <br>
+
+        <b>{row['Predicted_pIC50']:.3f}</b>
+
+        <br><br>
+
+        {row['Recommendation']}
+
+        </div>
+
+        """,
+        unsafe_allow_html=True
+        )
+
+
+
+# ==============================
+# Visualization
+# ==============================
+
+
+st.subheader(
+"📊 Candidate Activity Distribution"
 )
 
 
-ax.set_ylabel(
-    "Predicted pIC50"
+fig,ax=plt.subplots(
+    figsize=(8,6)
+)
+
+
+plot_df=result.sort_values(
+    "Predicted_pIC50"
+)
+
+
+ax.barh(
+    plot_df["molecule_chembl_id"],
+    plot_df["Predicted_pIC50"]
 )
 
 
 ax.set_xlabel(
-    "Compound"
+"Predicted pIC50"
 )
 
 
-plt.xticks(
-    rotation=45,
-    ha="right"
+ax.set_ylabel(
+"Candidate Molecule"
 )
+
+
+plt.tight_layout()
 
 
 st.pyplot(fig)
 
 
 
-# =========================
-# 최고 후보
-# =========================
-
-best=df.iloc[0]
+# ==============================
+# Final Candidate
+# ==============================
 
 
-st.success(
+best=result.iloc[0]
+
+
+st.markdown(
 f"""
-🏆 Best Candidate
 
-Compound:
+<div class="card">
+
+
+<h3>🎯 AI Recommended Candidate</h3>
+
+
+<b>Molecule ID</b>
+
+<br>
+
 {best['molecule_chembl_id']}
 
-Predicted pIC50:
+
+<br><br>
+
+
+<b>Predicted pIC50</b>
+
+<br>
+
 {best['Predicted_pIC50']:.3f}
 
-Evaluation:
+
+<br><br>
+
+
+<b>Evaluation</b>
+
+<br>
+
 {best['Recommendation']}
-"""
+
+
+</div>
+
+
+""",
+unsafe_allow_html=True
 )
