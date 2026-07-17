@@ -58,7 +58,54 @@ color:#0f766e;
 
 /* Hero Banner */
 
+.hero {
 
+background:
+linear-gradient(
+90deg,
+rgba(7,89,133,0.9),
+rgba(15,118,110,0.85)
+),
+url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
+
+background-size:cover;
+
+background-position:center;
+
+padding:45px;
+
+border-radius:25px;
+
+color:white;
+
+margin-bottom:25px;
+
+box-shadow:
+0px 10px 25px rgba(0,0,0,0.15);
+
+}
+
+
+.hero h1 {
+
+color:white;
+font-size:42px;
+
+}
+
+
+.hero h3 {
+
+color:#dbeafe;
+
+}
+
+
+.hero p {
+
+font-size:18px;
+
+}
 
 
 /* 카드 */
@@ -211,21 +258,6 @@ def grade(x):
 
 
 
-result["Recommendation"] = (
-    result["Predicted_pIC50"]
-    .apply(grade)
-)
-
-.hero {
-
-background:
-
-linear-gradient(
-90deg,
-rgba(7,89,133,0.9),
-rgba(15,118,110,0.85)
-),
-
 url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
 
 
@@ -249,27 +281,7 @@ box-shadow:
 }
 
 
-.hero h1 {
 
-color:white;
-
-font-size:42px;
-
-}
-
-
-.hero h3 {
-
-color:#dbeafe;
-
-}
-
-
-.hero p {
-
-font-size:18px;
-
-}
 
 # =====================================
 # Title
@@ -290,7 +302,7 @@ MMP13 Target-based Breast Cancer Candidate Screening
 
 
 <p>
-AI 기반 분자 구조 분석과 활성도 예측을 통한 신약 후보 물질 우선순위 평가 시스템
+AI 기반 분자 구조 분석과 활성도 예측을 통한 MMP13 억제 후보 물질 우선순위 평가 시스템
 </p>
 
 
@@ -524,7 +536,7 @@ f"""
 가장 높은 예측 활성도를 보인 후보 물질은 <b>{best['molecule_chembl_id']}</b>이며, 예측 pIC50 값은 <b>{best['Predicted_pIC50']:.3f}</b>입니다.
 
 
-AI 모델 기반 분석 결과, 해당 화합물이 MMP13 억제 후보 물질로서 가장 높은 우선순위를 가집니다. 
+AI 모델 기반 분석 결과, 해당 화합물이 MMP13 억제 후보 물질로서 우선 검토 대상 물질로 선정되었습니다. 
 
 
 </div>
