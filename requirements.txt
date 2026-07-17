@@ -4,4 +4,4 @@ numpy
 scikit-learn==1.5.2
 joblib
 rdkit-pypi
-chembl_webresource_client
+chembl_webresource_client==0.10.9
