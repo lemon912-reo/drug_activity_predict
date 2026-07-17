@@ -3,9 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# ==============================
+# =====================================
 # Page Setting
-# ==============================
+# =====================================
 
 st.set_page_config(
     page_title="AI Drug Discovery",
@@ -14,27 +14,28 @@ st.set_page_config(
 )
 
 
-# ==============================
+
+# =====================================
 # CSS
-# ==============================
+# =====================================
 
 st.markdown(
 """
 <style>
 
 .main {
-    background-color:#f7fbfc;
+background-color:#f7fbfc;
 }
 
 
 h1 {
-    color:#075985;
-    font-weight:800;
+color:#075985;
+font-weight:800;
 }
 
 
 h2 {
-    color:#0f766e;
+color:#0f766e;
 }
 
 
@@ -49,23 +50,7 @@ border-radius:15px;
 box-shadow:
 0px 4px 12px rgba(0,0,0,0.08);
 
-margin-bottom:20px;
-
-}
-
-
-.rank-card {
-
-background:white;
-
-padding:15px;
-
-border-radius:12px;
-
-box-shadow:
-0px 3px 10px rgba(0,0,0,0.08);
-
-text-align:center;
+margin-bottom:15px;
 
 }
 
@@ -78,73 +63,9 @@ unsafe_allow_html=True
 
 
 
-# ==============================
-# Title
-# ==============================
-
-st.markdown(
-"""
-# 🧬 AI Drug Discovery Platform
-
-## MMP13 Target-based Breast Cancer Candidate Screening
-
-"""
-)
-
-
-
-st.markdown(
-"""
-<div class="card">
-
-<b>🔬 Research Goal</b>
-
-<br><br>
-
-유방암 관련 표적 단백질 MMP13에 작용하는 후보 화합물을 대상으로  
-분자 구조 정보를 기반으로 학습한 Random Forest 모델을 활용하여  
-예상 활성도(pIC50)를 예측하고 후보 물질의 우선순위를 평가합니다.
-
-</div>
-
-""",
-unsafe_allow_html=True
-)
-
-
-
-# ==============================
-# Model Information
-# ==============================
-
-col1,col2,col3 = st.columns(3)
-
-
-with col1:
-    st.metric(
-        "Target",
-        "MMP13"
-    )
-
-
-with col2:
-    st.metric(
-        "Disease",
-        "Breast Cancer"
-    )
-
-
-with col3:
-    st.metric(
-        "Model",
-        "Random Forest"
-    )
-
-
-
-# ==============================
-# Result Data
-# ==============================
+# =====================================
+# Data
+# =====================================
 
 
 result = pd.DataFrame({
@@ -175,7 +96,6 @@ range(1,21),
 "CHEMBL178652"
 ],
 
-
 "Predicted_pIC50":[
 8.805,
 7.413,
@@ -199,7 +119,6 @@ range(1,21),
 6.358
 ]
 
-
 })
 
 
@@ -216,13 +135,85 @@ def grade(x):
 
 
 
-result["Recommendation"] = result["Predicted_pIC50"].apply(grade)
+result["Recommendation"] = (
+    result["Predicted_pIC50"]
+    .apply(grade)
+)
 
 
 
-# ==============================
+# =====================================
+# Title
+# =====================================
+
+
+st.markdown(
+"""
+# 🧬 AI Drug Discovery Platform
+
+## MMP13 Target-based Breast Cancer Candidate Screening
+
+"""
+)
+
+
+
+st.markdown(
+"""
+<div class="card">
+
+<b>🔬 Research Goal</b>
+
+MMP13 관련 후보 화합물의 분자 구조 정보를 기반으로  
+Random Forest AI 모델이 예상 활성도(pIC50)를 예측하고  
+신약 후보 물질의 우선순위를 평가합니다.
+
+</div>
+
+""",
+unsafe_allow_html=True
+)
+
+
+
+# =====================================
+# Model Info
+# =====================================
+
+
+with st.sidebar:
+
+    st.header("🧬 Model Information")
+
+    st.write(
+"""
+Target
+
+🎯 MMP13
+
+
+Disease
+
+🩺 Breast Cancer
+
+
+Model
+
+🤖 Random Forest Regression
+
+
+Output
+
+Predicted pIC50
+
+"""
+)
+
+
+
+# =====================================
 # Ranking Table
-# ==============================
+# =====================================
 
 
 st.subheader(
@@ -231,38 +222,35 @@ st.subheader(
 
 
 st.dataframe(
-    result,
-    use_container_width=True,
-    hide_index=True
+result,
+use_container_width=True,
+hide_index=True
 )
 
 
 
-# ==============================
-# Top 5 Cards
-# ==============================
+# =====================================
+# Top Candidate Cards
+# =====================================
 
 
 st.subheader(
-"🥇 Top 5 Candidate Molecules"
+"⭐ Top 5 Candidate Molecules"
 )
 
 
-top5=result.head(5)
+cols = st.columns(5)
 
 
+for i in range(5):
 
-cols=st.columns(5)
-
-
-for i,(_,row) in enumerate(top5.iterrows()):
+    row=result.iloc[i]
 
     with cols[i]:
 
         st.markdown(
         f"""
-
-        <div class="rank-card">
+        <div class="card">
 
         🏆 Rank {row['Rank']}
 
@@ -274,11 +262,9 @@ for i,(_,row) in enumerate(top5.iterrows()):
 
         pIC50
 
-        <br>
-
-        <b>{row['Predicted_pIC50']:.3f}</b>
-
-        <br><br>
+        <h3>
+        {row['Predicted_pIC50']:.3f}
+        </h3>
 
         {row['Recommendation']}
 
@@ -290,39 +276,46 @@ for i,(_,row) in enumerate(top5.iterrows()):
 
 
 
-# ==============================
+# =====================================
 # Visualization
-# ==============================
+# =====================================
 
 
 st.subheader(
-"📊 Candidate Activity Distribution"
+"📊 Candidate Activity Visualization"
 )
 
 
-fig,ax=plt.subplots(
-    figsize=(8,6)
+
+top5=result.head(5)
+
+
+
+fig, ax = plt.subplots(
+    figsize=(5,2.5)
 )
 
 
-plot_df=result.sort_values(
-    "Predicted_pIC50"
-)
-
-
-ax.barh(
-    plot_df["molecule_chembl_id"],
-    plot_df["Predicted_pIC50"]
-)
-
-
-ax.set_xlabel(
-"Predicted pIC50"
+ax.bar(
+    top5["molecule_chembl_id"],
+    top5["Predicted_pIC50"]
 )
 
 
 ax.set_ylabel(
-"Candidate Molecule"
+"Predicted pIC50"
+)
+
+
+ax.set_xlabel(
+"Candidate"
+)
+
+
+plt.xticks(
+rotation=45,
+ha="right",
+fontsize=8
 )
 
 
@@ -333,9 +326,9 @@ st.pyplot(fig)
 
 
 
-# ==============================
-# Final Candidate
-# ==============================
+# =====================================
+# Summary
+# =====================================
 
 
 best=result.iloc[0]
@@ -343,42 +336,37 @@ best=result.iloc[0]
 
 st.markdown(
 f"""
-
 <div class="card">
 
-
-<h3>🎯 AI Recommended Candidate</h3>
-
-
-<b>Molecule ID</b>
-
-<br>
-
-{best['molecule_chembl_id']}
+<h3>🧬 AI Screening Result</h3>
 
 
-<br><br>
+가장 높은 예측 활성도를 보인 후보 물질은
 
 
-<b>Predicted pIC50</b>
-
-<br>
-
-{best['Predicted_pIC50']:.3f}
+<b>{best['molecule_chembl_id']}</b>
 
 
-<br><br>
+이며,
 
 
-<b>Evaluation</b>
+예측 pIC50 값은
 
-<br>
 
-{best['Recommendation']}
+<b>{best['Predicted_pIC50']:.3f}</b>
+
+
+입니다.
+
+
+AI 모델 기반 분석 결과,
+
+해당 화합물이 MMP13 억제 후보 물질로서
+
+가장 높은 우선순위를 가집니다.
 
 
 </div>
-
 
 """,
 unsafe_allow_html=True
