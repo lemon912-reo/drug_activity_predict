@@ -1,16 +1,10 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import joblib
-import requests
-
-from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem
 
 
-# =====================================================
+# -----------------------------
 # 페이지 설정
-# =====================================================
+# -----------------------------
 
 st.set_page_config(
     page_title="AI Drug Discovery Platform",
@@ -19,74 +13,31 @@ st.set_page_config(
 )
 
 
-# =====================================================
-# CSS 디자인
-# =====================================================
+# -----------------------------
+# CSS
+# -----------------------------
 
 st.markdown(
 """
 <style>
 
-.main {
-    background-color:#f7fbfc;
+.main{
+background-color:#f7fbfc;
 }
 
-h1 {
-    color:#075985;
-    font-weight:800;
+h1{
+color:#075985;
+font-weight:800;
 }
 
-h2 {
-    color:#0f766e;
-}
+.info-card{
 
-
-.stButton>button {
-
-    width:100%;
-    height:45px;
-    border-radius:10px;
-
-    background-color:#0f766e;
-    color:white;
-
-    font-size:16px;
-    font-weight:bold;
-}
-
-
-.stButton>button:hover {
-
-    background-color:#115e59;
-
-}
-
-
-div[data-testid="stMetric"] {
-
-    background-color:white;
-    border-radius:15px;
-
-    padding:20px;
-
-    box-shadow:
-    0px 4px 12px rgba(0,0,0,0.08);
-
-}
-
-
-.info-card {
-
-background-color:white;
-
+background:white;
 padding:20px;
-
 border-radius:15px;
 
 box-shadow:
 0px 4px 12px rgba(0,0,0,0.08);
-
-margin-bottom:20px;
 
 }
 
@@ -98,302 +49,18 @@ unsafe_allow_html=True
 
 
 
-# =====================================================
-# 모델 불러오기
-# =====================================================
-
-model = joblib.load(
-    "drug_activity_model.pkl"
-)
-
-
-
-# =====================================================
-# ChEMBL ID → SMILES
-# =====================================================
-
-def get_smiles(chembl_id):
-
-    try:
-
-        url = (
-            f"https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}.json"
-        )
-
-
-        response=requests.get(
-            url,
-            timeout=10
-        )
-
-
-        if response.status_code != 200:
-
-            return None
-
-
-        mol=response.json()
-
-
-        structures=mol.get(
-            "molecule_structures"
-        )
-
-
-        if structures is None:
-
-            return None
-
-
-        return structures.get(
-            "canonical_smiles"
-        )
-
-
-    except Exception as e:
-
-        return None
-
-
-
-# =====================================================
-# 약물명 → ChEMBL ID
-# =====================================================
-
-def search_chembl_id(input_text):
-
-    try:
-
-        # -------------------------
-        # 1) CHEMBL ID 직접 입력
-        # -------------------------
-
-        if input_text.upper().startswith("CHEMBL"):
-
-            url = (
-                f"https://www.ebi.ac.uk/chembl/api/data/molecule/{input_text.upper()}.json"
-            )
-
-
-            response=requests.get(
-                url,
-                timeout=10
-            )
-
-
-            if response.status_code==200:
-
-                return input_text.upper()
-
-
-        # -------------------------
-        # 2) 화합물 이름 검색
-        # -------------------------
-
-        url = (
-            "https://www.ebi.ac.uk/chembl/api/data/molecule.json"
-            f"?molecule_synonyms__molecule_synonym__iexact={input_text}"
-        )
-
-
-        response=requests.get(
-            url,
-            timeout=10
-        )
-
-
-        if response.status_code!=200:
-
-            return None
-
-
-        data=response.json()
-
-
-        molecules=data.get(
-            "molecules",
-            []
-        )
-
-
-        if len(molecules)>0:
-
-            return molecules[0]["molecule_chembl_id"]
-
-
-        return None
-
-
-    except Exception as e:
-
-        st.write(e)
-
-        return None
-
-
-
-# =====================================================
-# SMILES → Morgan Fingerprint
-# =====================================================
-
-def smiles_to_fp(smiles):
-
-    mol = Chem.MolFromSmiles(
-        smiles
-    )
-
-
-    if mol is None:
-
-        return None
-
-
-    fp = AllChem.GetMorganFingerprintAsBitVect(
-        mol,
-        radius=2,
-        nBits=2048
-    )
-
-
-    arr=np.zeros(
-        (2048,),
-        dtype=int
-    )
-
-
-    DataStructs.ConvertToNumpyArray(
-        fp,
-        arr
-    )
-
-
-    return arr
-
-
-
-# =====================================================
-# AI 예측
-# =====================================================
-
-def predict_pIC50(chembl_id):
-
-
-    smiles=get_smiles(
-        chembl_id
-    )
-
-
-    if smiles is None:
-
-        return None,None
-
-
-    fp=smiles_to_fp(
-        smiles
-    )
-
-
-    if fp is None:
-
-        return None,smiles
-
-
-
-    X=np.array(fp).reshape(
-        1,-1
-    )
-
-
-    prediction=model.predict(
-        X
-    )[0]
-
-
-    return prediction,smiles
-
-
-
-# =====================================================
-# 추천 등급
-# =====================================================
-
-def recommendation(score):
-
-    if score>=8:
-
-        return "⭐ 매우 유망"
-
-    elif score>=7:
-
-        return "🟢 유망"
-
-    else:
-
-        return "추가 검토"
-
-
-
-# =====================================================
-# Sidebar
-# =====================================================
-
-with st.sidebar:
-
-
-    st.header(
-        "🧬 AI Drug Discovery"
-    )
-
-
-    st.write(
-"""
-### Target
-
-🎯 MMP13  
-(CHEMBL280)
-
-
-### Disease
-
-🩺 Breast Cancer
-
-
-### Model
-
-🤖 Random Forest Regression
-
-
-### Output
-
-Predicted pIC50
-
-"""
-)
-
-
-    st.divider()
-
-
-    st.caption(
-        "ChEMBL + RDKit + Machine Learning"
-    )
-
-
-
-# =====================================================
-# Main
-# =====================================================
-
+# -----------------------------
+# 제목
+# -----------------------------
 
 st.markdown(
 """
 # 🧬 AI 유방암 억제 후보 물질 예측
 
-## MMP13 Target-based Candidate Screening
+## MMP13 Target-based Breast Cancer Candidate Screening
 
 """
 )
-
 
 
 st.markdown(
@@ -402,9 +69,8 @@ st.markdown(
 
 <b>🔬 연구 목적</b>
 
-유방암 관련 표적 단백질 MMP13을 대상으로
-화합물의 분자 구조 정보를 분석하고,
-AI 모델을 활용하여 예상 활성도(pIC50)를 예측합니다.
+유방암 관련 표적 단백질 MMP13에 대한 후보 화합물의 활성 데이터를 기반으로 AI 모델이 예상 활성도(pIC50)를 평가하고
+우선순위 후보 물질을 탐색합니다.
 
 </div>
 
@@ -414,235 +80,117 @@ unsafe_allow_html=True
 
 
 
-mode=st.radio(
-    "분석 방법 선택",
-    [
-        "후보 약물 리스트 비교",
-        "직접 화합물 검색"
-    ]
+# -----------------------------
+# Sidebar
+# -----------------------------
+
+with st.sidebar:
+
+    st.header("🧬 Research Information")
+
+    st.write(
+"""
+🎯 Target  
+MMP13
+
+🩺 Disease  
+Breast Cancer
+
+🤖 Model  
+Random Forest Regression
+
+📊 Output  
+Predicted pIC50
+
+"""
+)
+
+
+# -----------------------------
+# 파일 업로드
+# -----------------------------
+
+
+st.subheader("📋 Candidate Molecule Screening")
+
+
+uploaded_file = st.file_uploader(
+    "AI 예측 결과 CSV 업로드",
+    type="csv"
 )
 
 
 
-# =====================================================
-# 1. 후보군 비교
-# =====================================================
+if uploaded_file:
 
-if mode=="후보 약물 리스트 비교":
+
+    df=pd.read_csv(uploaded_file)
 
 
     st.subheader(
-        "📋 Candidate Screening"
+        "Candidate Molecules"
+    )
+
+    st.dataframe(
+        df,
+        use_container_width=True
     )
 
 
-    uploaded_file=st.file_uploader(
-        "candidate.csv 업로드",
-        type="csv"
+    st.divider()
+
+
+    # 상위 후보 강조
+
+    st.subheader(
+        "🏆 AI Prediction Ranking"
     )
 
 
-    if uploaded_file:
+    if "Predicted_pIC50" in df.columns:
 
 
-        candidate=pd.read_csv(
-            uploaded_file
+        df=df.sort_values(
+            "Predicted_pIC50",
+            ascending=False
+        )
+
+
+        df=df.reset_index(drop=True)
+
+
+        df.insert(
+            0,
+            "Rank",
+            range(1,len(df)+1)
         )
 
 
         st.dataframe(
-            candidate
+            df,
+            use_container_width=True
         )
 
 
+        best=df.iloc[0]
 
-        if st.button(
-            "AI Screening 실행"
-        ):
 
+        st.success(
+            f"""
+🥇 최우수 후보
 
-            results=[]
+{best['molecule_chembl_id']}
 
+예측 pIC50 : {best['Predicted_pIC50']}
+"""
+        )
 
-            with st.spinner(
-                "분자 구조 분석 및 pIC50 예측 중..."
-            ):
 
+    else:
 
-                for chembl_id in candidate["molecule_chembl_id"]:
-
-
-                    score,smiles=predict_pIC50(
-                        chembl_id
-                    )
-
-
-                    if score is not None:
-
-
-                        results.append(
-                        {
-                        "molecule_chembl_id":chembl_id,
-                        "Predicted_pIC50":round(score,3),
-                        "Recommendation":recommendation(score)
-                        }
-                        )
-
-
-            result_df=pd.DataFrame(
-                results
-            )
-
-
-            result_df=result_df.sort_values(
-                "Predicted_pIC50",
-                ascending=False
-            ).reset_index(drop=True)
-
-
-
-            result_df.insert(
-                0,
-                "Rank",
-                range(1,len(result_df)+1)
-            )
-
-
-            st.subheader(
-                "🏆 AI Prediction Ranking"
-            )
-
-
-            st.dataframe(
-                result_df,
-                use_container_width=True
-            )
-
-
-
-# =====================================================
-# 2. 직접 검색
-# =====================================================
-
-
-else:
-
-
-    st.subheader(
-        "🔍 Molecule Search"
-    )
-
-
-    input_type=st.selectbox(
-        "검색 방법",
-        [
-            "ChEMBL ID",
-            "약물명 / 화합물명"
-        ]
-    )
-
-
-    user_input=st.text_input(
-        "화합물 입력",
-        placeholder="예: CHEMBL440498 또는 CTS-1027"
-    )
-
-
-
-    if st.button(
-        "AI Prediction 실행"
-    ):
-
-
-        if input_type=="약물명 / 화합물명":
-
-            chembl_id=search_chembl_id(
-                user_input
-            )
-
-
-        else:
-
-            chembl_id=user_input
-
-        # 🔍 확인용 추가
-        st.write("검색된 ChEMBL ID:", chembl_id)
-
-        if chembl_id is None:
-
-
-            st.error(
-                "화합물을 찾을 수 없습니다."
-            )
-
-
-        else:
-
-
-            score,smiles=predict_pIC50(
-                chembl_id
-            )
-
-
-            if score is None:
-
-
-                st.error(
-                    "SMILES 정보를 가져올 수 없습니다."
-                )
-
-
-            else:
-
-
-                st.success(
-                    f"{chembl_id} 분석 완료"
-                )
-
-
-                st.subheader(
-                    "📊 Prediction Result"
-                )
-
-
-                col1,col2,col3=st.columns(3)
-
-
-                with col1:
-
-                    st.metric(
-                        "Predicted pIC50",
-                        round(score,3)
-                    )
-
-
-                with col2:
-
-                    st.metric(
-                        "Activity",
-                        recommendation(score)
-                    )
-
-
-                with col3:
-
-                    st.metric(
-                        "Target",
-                        "MMP13"
-                    )
-
-
-
-                st.subheader(
-                    "🧬 Molecular Information"
-                )
-
-
-                st.write(
-                    "SMILES Structure"
-                )
-
-
-                st.code(
-                    smiles
-                )
+        st.warning(
+        """
+CSV 파일에 Predicted_pIC50 컬럼이 없습니다.
+AI 예측 결과 파일을 업로드해주세요.
+"""
+        )
