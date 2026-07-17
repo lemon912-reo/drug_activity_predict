@@ -1,43 +1,69 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import joblib
+import matplotlib.pyplot as plt
 
 
-# -----------------------------
+# ==============================
 # 페이지 설정
-# -----------------------------
+# ==============================
 
 st.set_page_config(
-    page_title="AI Drug Discovery Platform",
+    page_title="AI Drug Discovery",
     page_icon="🧬",
     layout="wide"
 )
 
 
-# -----------------------------
+
+# ==============================
 # CSS
-# -----------------------------
+# ==============================
 
 st.markdown(
 """
 <style>
 
-.main{
+.main {
 background-color:#f7fbfc;
 }
 
-h1{
+
+h1 {
 color:#075985;
 font-weight:800;
 }
 
-.info-card{
+
+h2 {
+color:#0f766e;
+}
+
+
+.stButton button {
+
+background-color:#0f766e;
+color:white;
+
+width:100%;
+height:45px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+}
+
+.card {
 
 background:white;
+
 padding:20px;
+
 border-radius:15px;
 
-box-shadow:
-0px 4px 12px rgba(0,0,0,0.08);
+box-shadow:0px 4px 12px rgba(0,0,0,0.1);
 
 }
 
@@ -49,13 +75,24 @@ unsafe_allow_html=True
 
 
 
-# -----------------------------
+# ==============================
+# 모델 불러오기
+# ==============================
+
+model = joblib.load(
+    "drug_activity_model.pkl"
+)
+
+
+
+# ==============================
 # 제목
-# -----------------------------
+# ==============================
+
 
 st.markdown(
 """
-# 🧬 AI 유방암 억제 후보 물질 예측
+# 🧬 AI Drug Discovery Platform
 
 ## MMP13 Target-based Breast Cancer Candidate Screening
 
@@ -65,12 +102,13 @@ st.markdown(
 
 st.markdown(
 """
-<div class="info-card">
+<div class="card">
 
-<b>🔬 연구 목적</b>
+<b>Research Goal</b>
 
-유방암 관련 표적 단백질 MMP13에 대한 후보 화합물의 활성 데이터를 기반으로 AI 모델이 예상 활성도(pIC50)를 평가하고
-우선순위 후보 물질을 탐색합니다.
+MMP13 표적 단백질과 관련된 후보 화합물의 분자 구조 정보를 기반으로  
+Random Forest 모델이 예상 활성도(pIC50)를 예측하고  
+신약 후보 우선순위를 평가합니다.
 
 </div>
 
@@ -80,42 +118,56 @@ unsafe_allow_html=True
 
 
 
-# -----------------------------
+st.write("")
+
+
+
+# ==============================
 # Sidebar
-# -----------------------------
+# ==============================
 
 with st.sidebar:
 
-    st.header("🧬 Research Information")
+    st.header("🧬 Model Information")
 
     st.write(
 """
-🎯 Target  
-MMP13
+Target
 
-🩺 Disease  
-Breast Cancer
+🎯 MMP13
 
-🤖 Model  
-Random Forest Regression
 
-📊 Output  
+Disease
+
+🩺 Breast Cancer
+
+
+Model
+
+🤖 Random Forest Regression
+
+
+Output
+
 Predicted pIC50
 
 """
+    )
+
+
+
+# ==============================
+# 파일 업로드
+# ==============================
+
+
+st.subheader(
+"📂 Candidate Molecule Dataset"
 )
 
 
-# -----------------------------
-# 파일 업로드
-# -----------------------------
-
-
-st.subheader("📋 Candidate Molecule Screening")
-
-
 uploaded_file = st.file_uploader(
-    "AI 예측 결과 CSV 업로드",
+    "candidate.csv 업로드",
     type="csv"
 )
 
@@ -124,73 +176,228 @@ uploaded_file = st.file_uploader(
 if uploaded_file:
 
 
-    df=pd.read_csv(uploaded_file)
-
-
-    st.subheader(
-        "Candidate Molecules"
+    candidate = pd.read_csv(
+        uploaded_file
     )
 
+
+    st.write("입력 후보 물질")
+
     st.dataframe(
-        df,
+        candidate,
         use_container_width=True
     )
 
 
-    st.divider()
+
+    if st.button(
+        "🚀 AI Prediction 실행"
+    ):
 
 
-    # 상위 후보 강조
-
-    st.subheader(
-        "🏆 AI Prediction Ranking"
-    )
+        with st.spinner(
+            "AI 모델이 후보 물질을 분석 중입니다..."
+        ):
 
 
-    if "Predicted_pIC50" in df.columns:
+            # -------------------------
+            # fingerprint는 이미 저장되어 있다고 가정
+            # -------------------------
+
+            X = np.stack(
+                candidate["fingerprint"].values
+            )
 
 
-        df=df.sort_values(
-            "Predicted_pIC50",
-            ascending=False
+            prediction = model.predict(X)
+
+
+            result = candidate.copy()
+
+
+            result["Predicted_pIC50"] = prediction
+
+
+            result = result.sort_values(
+                "Predicted_pIC50",
+                ascending=False
+            ).reset_index(drop=True)
+
+
+
+            result.insert(
+                0,
+                "Rank",
+                range(1,len(result)+1)
+            )
+
+
+
+            # 등급 추가
+
+            def grade(x):
+
+                if x>=8:
+                    return "⭐ 매우 유망"
+
+                elif x>=7:
+                    return "🟢 유망"
+
+                else:
+                    return "추가 검토"
+
+
+            result["Recommendation"] = (
+                result["Predicted_pIC50"]
+                .apply(grade)
+            )
+
+
+
+        st.success(
+            "AI Prediction 완료"
         )
 
 
-        df=df.reset_index(drop=True)
+
+        # ==============================
+        # 결과 출력
+        # ==============================
 
 
-        df.insert(
-            0,
-            "Rank",
-            range(1,len(df)+1)
+        st.subheader(
+            "🏆 Candidate Ranking"
         )
 
 
         st.dataframe(
-            df,
+            result[
+            [
+            "Rank",
+            "molecule_chembl_id",
+            "activity_type",
+            "activity_value",
+            "Predicted_pIC50",
+            "Recommendation"
+            ]
+            ],
             use_container_width=True
         )
 
 
-        best=df.iloc[0]
+
+        # ==============================
+        # Top 후보 그래프
+        # ==============================
 
 
-        st.success(
-            f"""
-🥇 최우수 후보
-
-{best['molecule_chembl_id']}
-
-예측 pIC50 : {best['Predicted_pIC50']}
-"""
+        st.subheader(
+            "📊 Top Candidate Visualization"
         )
 
 
-    else:
+        top10 = result.head(10)
 
-        st.warning(
-        """
-CSV 파일에 Predicted_pIC50 컬럼이 없습니다.
-AI 예측 결과 파일을 업로드해주세요.
-"""
+
+
+        fig,ax = plt.subplots(
+            figsize=(10,5)
+        )
+
+
+        ax.bar(
+            top10["molecule_chembl_id"],
+            top10["Predicted_pIC50"]
+        )
+
+
+        ax.set_ylabel(
+            "Predicted pIC50"
+        )
+
+
+        ax.set_xlabel(
+            "Compound"
+        )
+
+
+        plt.xticks(
+            rotation=45,
+            ha="right"
+        )
+
+
+        st.pyplot(fig)
+
+
+
+        # ==============================
+        # Scatter Plot
+        # ==============================
+
+
+        st.subheader(
+            "📈 Activity vs AI Prediction"
+        )
+
+
+        fig2,ax2 = plt.subplots(
+            figsize=(8,5)
+        )
+
+
+        ax2.scatter(
+            result["activity_value"],
+            result["Predicted_pIC50"]
+        )
+
+
+        ax2.set_xlabel(
+            "Experimental Activity Value"
+        )
+
+
+        ax2.set_ylabel(
+            "AI Predicted pIC50"
+        )
+
+
+        st.pyplot(fig2)
+
+
+
+        # ==============================
+        # 최고 후보 강조
+        # ==============================
+
+
+        best = result.iloc[0]
+
+
+        st.markdown(
+        f"""
+        <div class="card">
+
+        🏆 <b>AI Selected Candidate</b>
+
+        <br><br>
+
+        Compound :
+        {best['molecule_chembl_id']}
+
+        <br>
+
+        Predicted pIC50 :
+        {best['Predicted_pIC50']:.3f}
+
+        <br>
+
+        Evaluation :
+        {best['Recommendation']}
+
+
+        </div>
+
+        """,
+        unsafe_allow_html=True
         )
