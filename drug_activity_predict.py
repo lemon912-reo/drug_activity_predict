@@ -164,8 +164,7 @@ st.markdown(
 
 <b>🔬 Research Goal</b>
 
-MMP13 관련 후보 화합물의 분자 구조 정보를 기반으로  
-Random Forest AI 모델이 예상 활성도(pIC50)를 예측하고  
+MMP13 관련 후보 화합물의 분자 구조 정보를 기반으로 Random Forest AI 모델이 예상 활성도(pIC50)를 예측하고  
 신약 후보 물질의 우선순위를 평가합니다.
 
 </div>
