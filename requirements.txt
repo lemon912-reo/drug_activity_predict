@@ -1,8 +1,6 @@
 streamlit
-numpy<2
 pandas
-scikit-learn==1.6.1
+numpy
+scikit-learn
 joblib
-rdkit-pypi
-chembl_webresource_client
-requests
+matplotlib
