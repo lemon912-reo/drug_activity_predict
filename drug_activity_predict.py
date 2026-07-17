@@ -541,7 +541,8 @@ else:
 
             chembl_id=user_input
 
-
+        # 🔍 확인용 추가
+        st.write("검색된 ChEMBL ID:", chembl_id)
 
         if chembl_id is None:
 
