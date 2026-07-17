@@ -23,47 +23,85 @@ st.markdown(
 """
 <style>
 
+
+/* 전체 배경 */
+
 .main {
-background-color:#f7fbfc;
+
+background:
+linear-gradient(
+135deg,
+#f7fbfc 0%,
+#e6f4f1 50%,
+#eff6ff 100%
+);
+
 }
 
+
+
+/* 제목 */
 
 h1 {
+
 color:#075985;
-font-weight:800;
+
+font-weight:900;
+
+letter-spacing:-1px;
+
 }
+
 
 
 h2 {
+
 color:#0f766e;
+
+font-weight:700;
+
 }
 
+
+
+/* 카드 */
 
 .card {
 
-background:white;
+background:
+rgba(255,255,255,0.85);
 
-padding:15px;
+padding:20px;
 
-border-radius:18px;
+border-radius:20px;
 
-border:1px solid #e5e7eb;
+border:1px solid #dbeafe;
+
 
 box-shadow:
-0px 6px 15px rgba(0,0,0,0.08);
+
+0px 8px 20px rgba(0,0,0,0.08);
+
 
 text-align:center;
 
+backdrop-filter:blur(5px);
+
+
 }
 
+
+
+/* 카드 제목 */
 
 .card h3 {
 
 color:#075985;
 
-margin:5px;
+margin:8px;
 
 }
+
 
 
 .card h4 {
@@ -75,12 +113,40 @@ margin:0;
 }
 
 
+
+/* 데이터프레임 */
+
+[data-testid="stDataFrame"] {
+
+border-radius:15px;
+
+overflow:hidden;
+
+}
+
+
+
+/* 사이드바 */
+
+section[data-testid="stSidebar"] {
+
+background:
+
+linear-gradient(
+180deg,
+#ecfeff,
+#f8fafc
+);
+
+}
+
+
+
 </style>
 
 """,
 unsafe_allow_html=True
 )
-
 
 
 # =====================================
@@ -160,7 +226,60 @@ result["Recommendation"] = (
     .apply(grade)
 )
 
+.hero {
 
+background:
+
+linear-gradient(
+90deg,
+rgba(7,89,133,0.9),
+rgba(15,118,110,0.85)
+),
+
+url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
+
+
+background-size:cover;
+
+background-position:center;
+
+
+padding:45px;
+
+border-radius:25px;
+
+color:white;
+
+margin-bottom:25px;
+
+box-shadow:
+
+0px 10px 25px rgba(0,0,0,0.15);
+
+}
+
+
+.hero h1 {
+
+color:white;
+
+font-size:42px;
+
+}
+
+
+.hero h3 {
+
+color:#dbeafe;
+
+}
+
+
+.hero p {
+
+font-size:18px;
+
+}
 
 # =====================================
 # Title
@@ -169,11 +288,26 @@ result["Recommendation"] = (
 
 st.markdown(
 """
-# 🧬 AI Drug Discovery Platform
+<div class="hero">
 
-## MMP13 Target-based Breast Cancer Candidate Screening
+<h1>
+🧬 AI Drug Discovery Platform
+</h1>
 
-"""
+<h3>
+MMP13 Target-based Breast Cancer Candidate Screening
+</h3>
+
+
+<p>
+AI 기반 분자 구조 분석과 활성도 예측을 통한 신약 후보 물질 우선순위 평가 시스템
+</p>
+
+
+</div>
+
+""",
+unsafe_allow_html=True
 )
 
 
