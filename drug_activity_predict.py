@@ -58,66 +58,6 @@ color:#0f766e;
 
 /* Hero Banner */
 
-.hero {
-
-
-background:
-
-linear-gradient(
-90deg,
-rgba(7,89,133,0.9),
-rgba(15,118,110,0.85)
-),
-
-url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
-
-
-background-size:cover;
-
-background-position:center;
-
-
-padding:40px;
-
-border-radius:25px;
-
-
-color:white;
-
-
-margin-bottom:25px;
-
-
-box-shadow:
-
-0px 10px 25px rgba(0,0,0,0.15);
-
-
-}
-
-
-
-.hero h1 {
-
-color:white;
-
-font-size:38px;
-
-}
-
-
-.hero h3 {
-
-color:#dbeafe;
-
-}
-
-
-.hero p {
-
-font-size:18px;
-
-}
 
 
 
