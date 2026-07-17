@@ -281,41 +281,75 @@ for i in range(5):
 
 
 st.subheader(
-"📊 Candidate Activity Visualization"
+"📊 AI Prediction Ranking Visualization"
+)
+
+
+# 전체 20개
+plot_df = result.copy()
+
+
+# Top5 표시용
+top5_ids = set(
+    result.head(5)["molecule_chembl_id"]
 )
 
 
 
-top5=result.head(5)
+# 색상 지정
+colors = [
+    "orange" if x in top5_ids else "lightgray"
+    for x in plot_df["molecule_chembl_id"]
+]
 
 
 
 fig, ax = plt.subplots(
-    figsize=(5,2.5)
+    figsize=(7,5)
 )
 
 
-ax.bar(
-    top5["molecule_chembl_id"],
-    top5["Predicted_pIC50"]
+ax.barh(
+    plot_df["molecule_chembl_id"],
+    plot_df["Predicted_pIC50"],
+    color=colors
 )
 
 
-ax.set_ylabel(
+
+# 높은 값이 위로 오도록
+ax.invert_yaxis()
+
+
+
+ax.set_xlabel(
 "Predicted pIC50"
 )
 
 
-ax.set_xlabel(
-"Candidate"
+ax.set_ylabel(
+"Candidate Molecule"
 )
 
 
-plt.xticks(
-rotation=45,
-ha="right",
-fontsize=8
+
+ax.set_title(
+"AI Screening Result (Top 5 Highlighted)"
 )
+
+
+
+# 숫자 표시
+for i, value in enumerate(plot_df["Predicted_pIC50"]):
+
+    ax.text(
+        value + 0.05,
+        i,
+        f"{value:.2f}",
+        va="center",
+        fontsize=8
+    )
+
 
 
 plt.tight_layout()
@@ -340,29 +374,12 @@ f"""
 <h3>🧬 AI Screening Result</h3>
 
 
-가장 높은 예측 활성도를 보인 후보 물질은
+가장 높은 예측 활성도를 보인 후보 물질은 <b>{best['molecule_chembl_id']}</b>이며,
+
+예측 pIC50 값은 <b>{best['Predicted_pIC50']:.3f}</b>입니다.
 
 
-<b>{best['molecule_chembl_id']}</b>
-
-
-이며,
-
-
-예측 pIC50 값은
-
-
-<b>{best['Predicted_pIC50']:.3f}</b>
-
-
-입니다.
-
-
-AI 모델 기반 분석 결과,
-
-해당 화합물이 MMP13 억제 후보 물질로서
-
-가장 높은 우선순위를 가집니다.
+AI 모델 기반 분석 결과, 해당 화합물이 MMP13 억제 후보 물질로서 가장 높은 우선순위를 가집니다.
 
 
 </div>
