@@ -5,8 +5,8 @@ import joblib
 
 from chembl_webresource_client.new_client import new_client
 from rdkit import Chem, DataStructs
-from rdkit.Chem import AllChem, Draw
-from PIL import Image
+from rdkit.Chem import AllChem
+
 
 
 # =====================================================
@@ -208,24 +208,6 @@ def smiles_to_fp(smiles):
 
 
     return arr
-
-# =====================================================
-# 분자 구조 이미지 생성
-# =====================================================
-
-def draw_molecule(smiles):
-
-    mol = Chem.MolFromSmiles(smiles)
-
-    if mol is None:
-        return None
-
-    img = Draw.MolToImage(
-        mol,
-        size=(400,400)
-    )
-
-    return img
 
 # =====================================================
 # AI 예측
@@ -593,27 +575,11 @@ else:
                     "🧬 Molecular Information"
                 )
 
-                col1, col2 = st.columns(2)
-                with col1:
+                st.write("**SMILES Structure**")
 
-                    st.write("**SMILES Structure**")
-
-                    st.code(
+                st.code(
                         smiles
-                    )
+                )
 
 
-                with col2:
-
-                    st.write("**2D Molecular Structure**")
-
-                    mol_img = draw_molecule(
-                        smiles
-                    )
-
-                    if mol_img:
-
-                        st.image(
-                            mol_img,
-                            caption=f"{chembl_id} molecular structure"
-                        )
+        
