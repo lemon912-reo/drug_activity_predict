@@ -256,7 +256,10 @@ def grade(x):
     else:
         return "추가 검토"
 
-
+result["Recommendation"] = (
+    result["Predicted_pIC50"]
+    .apply(grade)
+)
 
 
 # =====================================
