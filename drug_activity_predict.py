@@ -43,14 +43,36 @@ color:#0f766e;
 
 background:white;
 
-padding:20px;
+padding:15px;
 
-border-radius:15px;
+border-radius:18px;
+
+border:1px solid #e5e7eb;
 
 box-shadow:
-0px 4px 12px rgba(0,0,0,0.08);
+0px 6px 15px rgba(0,0,0,0.08);
 
-margin-bottom:15px;
+text-align:center;
+
+height:150px;
+
+}
+
+
+.card h3 {
+
+color:#075985;
+
+margin:5px;
+
+}
+
+
+.card h4 {
+
+color:#0f766e;
+
+margin:0;
 
 }
 
@@ -279,84 +301,132 @@ for i in range(5):
 # Visualization
 # =====================================
 
-
 st.subheader(
-"📊 AI Prediction Ranking Visualization"
+    "📊 Candidate Ranking Visualization"
 )
 
 
-# 전체 20개
-plot_df = result.copy()
-
-
-# Top5 표시용
-top5_ids = set(
-    result.head(5)["molecule_chembl_id"]
+# Top 5 강조
+result["Highlight"] = result["Rank"].apply(
+    lambda x: "Top 5" if x <= 5 else "Others"
 )
 
+
+fig, ax = plt.subplots(
+    figsize=(6, 2.8)
+)
 
 
 # 색상 지정
 colors = [
-    "orange" if x in top5_ids else "lightgray"
-    for x in plot_df["molecule_chembl_id"]
+    "#0f766e" if rank <= 5 else "#cbd5e1"
+    for rank in result["Rank"]
 ]
 
 
-
-fig, ax = plt.subplots(
-    figsize=(7,5)
+ax.bar(
+    result["Rank"],
+    result["Predicted_pIC50"],
+    color=colors,
+    width=0.7
 )
 
 
-ax.barh(
-    plot_df["molecule_chembl_id"],
-    plot_df["Predicted_pIC50"],
-    color=colors
+# 제목
+ax.set_title(
+    "AI Predicted pIC50 Ranking",
+    fontsize=10,
+    pad=10
 )
-
-
-
-# 높은 값이 위로 오도록
-ax.invert_yaxis()
-
 
 
 ax.set_xlabel(
-"Predicted pIC50"
+    "Candidate Rank",
+    fontsize=8
 )
 
 
 ax.set_ylabel(
-"Candidate Molecule"
+    "Predicted pIC50",
+    fontsize=8
 )
 
 
 
-ax.set_title(
-"AI Screening Result (Top 5 Highlighted)"
+# 축 폰트
+ax.tick_params(
+    axis="both",
+    labelsize=7
 )
 
 
+# x축 간격
+ax.set_xticks(
+    result["Rank"]
+)
 
-# 숫자 표시
-for i, value in enumerate(plot_df["Predicted_pIC50"]):
 
-    ax.text(
-        value + 0.05,
-        i,
-        f"{value:.2f}",
-        va="center",
-        fontsize=8
-    )
-
+# 격자
+ax.grid(
+    axis="y",
+    alpha=0.3
+)
 
 
 plt.tight_layout()
 
 
-st.pyplot(fig)
+st.pyplot(
+    fig,
+    use_container_width=False
+)
 
+
+
+# =====================================
+# Top Candidate Cards
+# =====================================
+
+st.subheader(
+    "🏆 Top 5 Candidate Molecules"
+)
+
+
+top5 = result.head(5)
+
+
+
+cols = st.columns(5)
+
+
+for i, (_, row) in enumerate(top5.iterrows()):
+
+    with cols[i]:
+
+        st.markdown(
+        f"""
+        <div class="card">
+
+        <h4>#{int(row['Rank'])}</h4>
+
+        <b>{row['molecule_chembl_id']}</b>
+
+        <br><br>
+
+        pIC50
+
+        <h3>
+        {row['Predicted_pIC50']:.2f}
+        </h3>
+
+        <span>
+        {row['Recommendation']}
+        </span>
+
+        </div>
+        """,
+        unsafe_allow_html=True
+        )
 
 
 # =====================================
@@ -374,9 +444,7 @@ f"""
 <h3>🧬 AI Screening Result</h3>
 
 
-가장 높은 예측 활성도를 보인 후보 물질은 <b>{best['molecule_chembl_id']}</b>이며,
-
-예측 pIC50 값은 <b>{best['Predicted_pIC50']:.3f}</b>입니다.
+가장 높은 예측 활성도를 보인 후보 물질은 <b>{best['molecule_chembl_id']}</b>이며, 예측 pIC50 값은 <b>{best['Predicted_pIC50']:.3f}</b>입니다.
 
 
 AI 모델 기반 분석 결과, 해당 화합물이 MMP13 억제 후보 물질로서 가장 높은 우선순위를 가집니다.
