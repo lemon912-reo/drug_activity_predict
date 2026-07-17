@@ -160,13 +160,39 @@ def get_smiles(chembl_id):
 # 약물명 → ChEMBL ID
 # =====================================================
 
-def search_chembl_id(name):
+def search_chembl_id(input_text):
 
     try:
 
+        # -------------------------
+        # 1) CHEMBL ID 직접 입력
+        # -------------------------
+
+        if input_text.upper().startswith("CHEMBL"):
+
+            url = (
+                f"https://www.ebi.ac.uk/chembl/api/data/molecule/{input_text.upper()}.json"
+            )
+
+
+            response=requests.get(
+                url,
+                timeout=10
+            )
+
+
+            if response.status_code==200:
+
+                return input_text.upper()
+
+
+        # -------------------------
+        # 2) 화합물 이름 검색
+        # -------------------------
+
         url = (
             "https://www.ebi.ac.uk/chembl/api/data/molecule.json"
-            f"?pref_name__icontains={name}"
+            f"?molecule_synonyms__molecule_synonym__iexact={input_text}"
         )
 
 
@@ -176,7 +202,7 @@ def search_chembl_id(name):
         )
 
 
-        if response.status_code != 200:
+        if response.status_code!=200:
 
             return None
 
@@ -190,14 +216,12 @@ def search_chembl_id(name):
         )
 
 
-        if len(molecules)==0:
+        if len(molecules)>0:
 
-            return None
+            return molecules[0]["molecule_chembl_id"]
 
 
-        return molecules[0].get(
-            "molecule_chembl_id"
-        )
+        return None
 
 
     except Exception as e:
