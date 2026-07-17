@@ -383,51 +383,6 @@ st.pyplot(
 
 
 
-# =====================================
-# Top Candidate Cards
-# =====================================
-
-st.subheader(
-    "🏆 Top 5 Candidate Molecules"
-)
-
-
-top5 = result.head(5)
-
-
-
-cols = st.columns(5)
-
-
-for i, (_, row) in enumerate(top5.iterrows()):
-
-    with cols[i]:
-
-        st.markdown(
-        f"""
-        <div class="card">
-
-        <h4>#{int(row['Rank'])}</h4>
-
-        <b>{row['molecule_chembl_id']}</b>
-
-        <br><br>
-
-        pIC50
-
-        <h3>
-        {row['Predicted_pIC50']:.2f}
-        </h3>
-
-        <span>
-        {row['Recommendation']}
-        </span>
-
-        </div>
-        """,
-        unsafe_allow_html=True
-        )
-
 
 # =====================================
 # Summary
