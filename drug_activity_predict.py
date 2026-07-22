@@ -27,11 +27,6 @@ margin-bottom:25px;box-shadow:0px 10px 25px rgba(0,0,0,0.15);}
 .hero h1{color:white;font-size:42px;font-weight:800;}
 .hero h3{color:#dbeafe;}
 .hero p{font-size:18px;max-width:700px;line-height:1.6;}
-</style>
-""",
-unsafe_allow_html=True
-)
-
 /* 카드 */
 .card {background:linear-gradient(135deg,#ffffff,#f8fafc);
 padding:20px;border-radius:20px;border:1px solid #dbeafe;box-shadow:0px 8px 20px rgba(15,118,110,0.12);text-align:center;}
