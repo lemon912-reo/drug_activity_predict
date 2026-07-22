@@ -5,7 +5,6 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 import matplotlib.pyplot as plt
-import base64
 
 # 페이지 설정 
 # =====================================
@@ -14,8 +13,6 @@ st.set_page_config(
     page_icon="🧬",
     layout="wide")
 
-with open("hero.jpg", "rb") as f:
-    hero_base64 = base64.b64encode(f.read()).decode()
 
 # CSS
 # =====================================
