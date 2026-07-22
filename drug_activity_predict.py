@@ -25,26 +25,15 @@ f"""
 /* 전체 배경 */
 .stApp {{background:linear-gradient(135deg,#f0f8fa,#ffffff);}}
 /* 제목 */
-h1 {color:#075985;font-weight:800;}
-h2 {color:#0f766e;}
+h1 {{color:#075985;font-weight:800;}}
+h2 {{color:#0f766e;}}
 
 # hero
 # =====================================
 /* Hero Banner */
-.hero{{
-background:
-linear-gradient(
-90deg,
-rgba(7,89,133,0.82),
-rgba(15,118,110,0.70)
-),
+.hero{{background:linear-gradient(90deg,rgba(7,89,133,0.82),rgba(15,118,110,0.70)),
 url("data:image/jpeg;base64,{hero_base64}");
-background-size:cover;
-background-position:center;
-padding:45px;
-border-radius:25px;
-color:white;
-margin-bottom:25px;
+background-size:cover;background-position:center;padding:45px;border-radius:25px;color:white;margin-bottom:25px;
 box-shadow:0px 10px 25px rgba(0,0,0,0.15);}}
 .hero h1{{color:white;font-size:42px;font-weight:800;}}
 .hero h3{{color:#dbeafe;}}
@@ -52,12 +41,7 @@ box-shadow:0px 10px 25px rgba(0,0,0,0.15);}}
 
 /* 카드 */
 .card {{background:linear-gradient(135deg,#ffffff,#f8fafc);
-padding:20px;
-border-radius:20px;
-border:1px solid #dbeafe;
-box-shadow:
-0px 8px 20px rgba(15,118,110,0.12);
-text-align:center;}}
+padding:20px;border-radius:20px;border:1px solid #dbeafe;box-shadow:0px 8px 20px rgba(15,118,110,0.12);text-align:center;}}
 .card h3 {{color:#075985;}}
 /* 표 */
 [data-testid="stDataFrame"] {{border-radius:15px;box-shadow:0px 5px 15px rgba(0,0,0,0.08);}}
