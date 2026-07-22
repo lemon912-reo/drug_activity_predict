@@ -5,7 +5,6 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 import matplotlib.pyplot as plt
-import base64
 
 # 페이지 설정 
 # =====================================
@@ -14,39 +13,33 @@ st.set_page_config(
     page_icon="🧬",
     layout="wide")
 
-with open("hero.jpg", "rb") as f:
-    hero_base64 = base64.b64encode(f.read()).decode("utf-8")
 
 # CSS
 # =====================================
 st.markdown(
-f"""
+"""
 <style>
-/* 전체 배경 */
-.stApp {{background:linear-gradient(135deg,#f0f8fa,#ffffff);}}
-/* 제목 */
-h1 {{color:#075985;font-weight:800;}}
-h2 {{color:#0f766e;}}
-
-# hero
-# =====================================
-/* Hero Banner */
-.hero{{background:linear-gradient(90deg,rgba(7,89,133,0.82),rgba(15,118,110,0.70)),
+.stApp {background:linear-gradient(135deg,#f0f8fa,#ffffff);}
+.hero{background:linear-gradient(90deg,rgba(7,89,133,0.85),rgba(15,118,110,0.75)),
 url("https://raw.githubusercontent.com/lemon912-reo/drug_activity_predict/main/hero.jpg");
-background-size:cover;background-position:center;padding:45px;border-radius:25px;color:white;margin-bottom:25px;
-box-shadow:0px 10px 25px rgba(0,0,0,0.15);}}
-.hero h1{{color:white;font-size:42px;font-weight:800;}}
-.hero h3{{color:#dbeafe;}}
-.hero p{{font-size:18px;max-width:700px;line-height:1.6;}}
+background-size:cover;background-position:center;padding:45px;border-radius:25px;color:white;
+margin-bottom:25px;box-shadow:0px 10px 25px rgba(0,0,0,0.15);}
+.hero h1{color:white;font-size:42px;font-weight:800;}
+.hero h3{color:#dbeafe;}
+.hero p{font-size:18px;max-width:700px;line-height:1.6;}
+</style>
+""",
+unsafe_allow_html=True
+)
 
 /* 카드 */
-.card {{background:linear-gradient(135deg,#ffffff,#f8fafc);
-padding:20px;border-radius:20px;border:1px solid #dbeafe;box-shadow:0px 8px 20px rgba(15,118,110,0.12);text-align:center;}}
-.card h3 {{color:#075985;}}
+.card {background:linear-gradient(135deg,#ffffff,#f8fafc);
+padding:20px;border-radius:20px;border:1px solid #dbeafe;box-shadow:0px 8px 20px rgba(15,118,110,0.12);text-align:center;}
+.card h3 {color:#075985;}
 /* 표 */
-[data-testid="stDataFrame"] {{border-radius:15px;box-shadow:0px 5px 15px rgba(0,0,0,0.08);}}
+[data-testid="stDataFrame"] {border-radius:15px;box-shadow:0px 5px 15px rgba(0,0,0,0.08);}
 /* Sidebar */
-section[data-testid="stSidebar"] {{background-color:#f0fdfa;}}
+section[data-testid="stSidebar"] {background-color:#f0fdfa;}
 </style>
 """,
 unsafe_allow_html=True)
