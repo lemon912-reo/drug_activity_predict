@@ -156,7 +156,7 @@ st.markdown(
 f"""
 <div class="card">
 <h2>Predicted pIC50</h2>
-<h1>{score:.3f}</h1>
+<h1>{best['Predicted_pIC50']:.3f}</h1>
 <h3>{grade}</h3>
 </div>
 """,
