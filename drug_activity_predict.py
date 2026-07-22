@@ -32,7 +32,7 @@ h2 {{color:#0f766e;}}
 # =====================================
 /* Hero Banner */
 .hero{{background:linear-gradient(90deg,rgba(7,89,133,0.82),rgba(15,118,110,0.70)),
-url("data:image/jpeg;base64,{hero_base64}");
+url("https://raw.githubusercontent.com/lemon912-reo/drug_activity_predict/main/hero.jpg");
 background-size:cover;background-position:center;padding:45px;border-radius:25px;color:white;margin-bottom:25px;
 box-shadow:0px 10px 25px rgba(0,0,0,0.15);}}
 .hero h1{{color:white;font-size:42px;font-weight:800;}}
