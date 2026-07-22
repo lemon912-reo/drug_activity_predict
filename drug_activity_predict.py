@@ -31,62 +31,25 @@ h2 {color:#0f766e;}
 # hero
 # =====================================
 /* Hero Banner */
-/* Hero */
-
-/* Hero Banner */
-
 .hero{
-
 background:
 linear-gradient(
 90deg,
 rgba(7,89,133,0.82),
 rgba(15,118,110,0.70)
 ),
-
 url("data:image/jpeg;base64,{hero_base64}");
-
 background-size:cover;
-
 background-position:center;
-
 padding:45px;
-
 border-radius:25px;
-
 color:white;
-
 margin-bottom:25px;
+box-shadow:0px 10px 25px rgba(0,0,0,0.15);}
+.hero h1{color:white;font-size:42px;font-weight:800;}
+.hero h3{color:#dbeafe;}
+.hero p{font-size:18px;max-width:700px;line-height:1.6;}
 
-box-shadow:0px 10px 25px rgba(0,0,0,0.15);
-
-}
-
-.hero h1{
-
-color:white;
-
-font-size:42px;
-
-font-weight:800;
-
-}
-
-.hero h3{
-
-color:#dbeafe;
-
-}
-
-.hero p{
-
-font-size:18px;
-
-max-width:700px;
-
-line-height:1.6;
-
-}
 /* 카드 */
 .card {background:linear-gradient(135deg,#ffffff,#f8fafc);
 padding:20px;
@@ -109,25 +72,18 @@ unsafe_allow_html=True)
 st.markdown(
 """
 <div class="hero">
-
 <h1>
-🧬 AI 기반 신약 후보 물질 예측 시스템
-</h1>
-
+🧬 AI 기반 신약 후보 물질 예측 시스템</h1>
 <h3>
-MMP13 Target-based Breast Cancer Candidate Screening
-</h3>
-
+MMP13 Target-based Breast Cancer Candidate Screening</h3>
 <p>
 AI 기반 분자 구조 분석과 활성도 예측을 통해
 MMP13 억제 후보 화합물의 활성을 예측하고
 신약 후보의 우선순위를 평가하는 플랫폼입니다.
 </p>
-
 </div>
 """,
-unsafe_allow_html=True
-)
+unsafe_allow_html=True)
 
 
 # Model Info
