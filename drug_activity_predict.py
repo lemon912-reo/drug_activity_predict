@@ -234,7 +234,8 @@ for i, row in enumerate(top5.itertuples()):
         unsafe_allow_html=True
         )
         
-
+st.markdown("<br>", unsafe_allow_html=True)
+st.subheader("📋 Final AI Recommendation")
 
 
 # =====================================
