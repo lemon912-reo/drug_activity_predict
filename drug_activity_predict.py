@@ -28,10 +28,101 @@ h2 {color:#0f766e;}
 # hero
 # =====================================
 /* Hero Banner */
-.hero{padding:40px;border-radius:25px;background:linear-gradient(135deg,#075985,#0f766e);color:white;margin-bottom:25px;}
-.hero h1{color:white;font-size:42px;margin-bottom:10px;}
-.hero h3{color:#dbeafe;}
-.hero p{font-size:18px;}
+/* Hero */
+
+.hero{
+
+position:relative;
+
+width:100%;
+
+height:380px;
+
+border-radius:25px;
+
+overflow:hidden;
+
+margin-bottom:30px;
+
+box-shadow:0px 10px 30px rgba(0,0,0,0.18);
+
+}
+
+.hero img{
+
+width:100%;
+
+height:100%;
+
+object-fit:cover;
+
+display:block;
+
+}
+
+.hero-overlay{
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:linear-gradient(
+90deg,
+rgba(7,89,133,0.82),
+rgba(15,118,110,0.60)
+);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+padding-left:70px;
+
+padding-right:70px;
+
+}
+
+.hero-title{
+
+font-size:44px;
+
+font-weight:800;
+
+color:white;
+
+margin-bottom:12px;
+
+}
+
+.hero-sub{
+
+font-size:22px;
+
+color:#dbeafe;
+
+margin-bottom:18px;
+
+}
+
+.hero-text{
+
+font-size:18px;
+
+line-height:1.7;
+
+color:white;
+
+max-width:700px;
+
+}
 /* 카드 */
 .card {background:linear-gradient(135deg,#ffffff,#f8fafc);
 padding:20px;
@@ -51,21 +142,36 @@ unsafe_allow_html=True)
 
 # Title
 # =====================================
-st.image("hero.jpg", use_container_width=True)
 st.markdown(
 """
 <div class="hero">
-<h1>
+
+<img src="hero.jpg">
+
+<div class="hero-overlay">
+
+<div class="hero-title">
+
 🧬 AI 기반 신약 후보 물질 예측 시스템
-</h1>
-<h3>
+
+</div>
+
+<div class="hero-sub">
+
 MMP13 Target-based Breast Cancer Candidate Screening
-</h3>
-<p>
-AI 기반 분자 구조 분석과 활성도 예측을 통해
-MMP13 억제 후보 화합물의 활성을 예측하고
-신약 후보의 우선순위를 평가하는 플랫폼입니다.
-</p>
+
+</div>
+
+<div class="hero-text">
+
+Random Forest 기반 AI 모델을 활용하여
+분자 구조(SMILES)로부터 활성도(pIC50)를 예측하고,
+MMP13 억제 후보 화합물의 우선순위를 평가합니다.
+
+</div>
+
+</div>
+
 </div>
 """,
 unsafe_allow_html=True
