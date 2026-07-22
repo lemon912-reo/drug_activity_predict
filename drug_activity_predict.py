@@ -152,34 +152,34 @@ if st.button("🧬 Predict pIC50", use_container_width=True):
     with st.spinner("AI가 분자 구조를 분석하는 중입니다..."):
         score = predict_smiles(row["smiles"])
         grade = recommendation(score)
-st.success("Prediction Complete!")
-st.markdown(
-f"""
-<div class="card">
-<h2>Predicted pIC50</h2>
-<h1>{best['Predicted_pIC50']:.3f}</h1>
-<h3>{grade}</h3>
-</div>
-""",
-unsafe_allow_html=True)
-if score >= 8:
-    st.info("""
+    st.success("Prediction Complete!")
+    st.markdown(
+    f"""
+    <div class="card">
+    <h2>Predicted pIC50</h2>
+    <h1>{score:.3f}</h1>
+    <h3>{grade}</h3>
+    </div>
+    """,
+    unsafe_allow_html=True)
+    if score >= 8:
+        st.info("""
 🧬 **AI Interpretation**
 
 매우 높은 활성을 보일 것으로 예측되었습니다.
 
 우선적으로 실험적 검증을 수행할 가치가 있는 후보입니다.
 """)
-elif score >= 7:
-    st.info("""
+    elif score >= 7:
+        st.info("""
 🧬 **AI Interpretation**
 
 활성이 기대되는 후보 화합물입니다.
 
 후속 실험을 통한 검증이 권장됩니다.
 """)
-else:
-    st.info("""
+    else:
+        st.info("""
 🧬 **AI Interpretation**
 
 현재 모델 기준에서는 우선순위가 낮은 후보입니다.
@@ -193,7 +193,16 @@ with tab2:
         grade = recommendation(score)
         st.metric("Predicted pIC50", f"{score:.3f}")
         st.success(grade)
-        
+
+
+candidate["Predicted_pIC50"] = candidate["smiles"].apply(predict_smiles)
+candidate["Recommendation"] = candidate["Predicted_pIC50"].apply(recommendation)
+candidate = candidate.sort_values(
+    "Predicted_pIC50",
+    ascending=False
+).reset_index(drop=True)
+candidate["Rank"] = candidate.index + 1
+result = candidate
 
 # Ranking Table
 # =====================================
