@@ -23,13 +23,7 @@ st.markdown(
 f"""
 <style>
 /* 전체 배경 */
-.stApp {
-background:
-linear-gradient(
-135deg,
-#f0f8fa,
-#ffffff
-);}
+.stApp {background:linear-gradient(135deg,#f0f8fa,#ffffff);}
 /* 제목 */
 h1 {color:#075985;font-weight:800;}
 h2 {color:#0f766e;}
@@ -37,19 +31,10 @@ h2 {color:#0f766e;}
 # hero
 # =====================================
 /* Hero Banner */
-.hero {{background:linear-gradient(90deg,rgba(7,89,133,0.9),rgba(15,118,110,0.85)),
-url("data:image/jpeg;base64,{hero_base64}");
-background-size:cover;
-background-position:center;
-padding:45px;
-border-radius:25px;
-color:white;
-margin-bottom:25px;
-box-shadow:
-0px 10px 25px rgba(0,0,0,0.15);}}
-.hero h1 {{color:white;font-size:42px;}}
-.hero h3 {{color:#dbeafe;}}
-.hero p {{font-size:18px;}}
+.hero{padding:40px;border-radius:25px;background:linear-gradient(135deg,#075985,#0f766e);color:white;margin-bottom:25px;}
+.hero h1{color:white;font-size:42px;margin-bottom:10px;}
+.hero h3{color:#dbeafe;}
+.hero p{font-size:18px;}
 /* 카드 */
 .card {background:linear-gradient(135deg,#ffffff,#f8fafc);
 padding:20px;
@@ -69,31 +54,25 @@ unsafe_allow_html=True)
 
 # Title
 # =====================================
+st.image("hero.jpg", use_container_width=True)
 st.markdown(
 """
 <div class="hero">
 <h1>
-🧬 AI 기반 신약 후보 물질 예측 시스템 
+🧬 AI 기반 신약 후보 물질 예측 시스템
 </h1>
 <h3>
-Breast Cancer Candidate Screening using MMP13 Target
+MMP13 Target-based Breast Cancer Candidate Screening
 </h3>
 <p>
-AI 기반 분자 구조 분석과 활성도 예측을 통한 MMP13 억제 후보 물질 우선순위 평가 시스템
+AI 기반 분자 구조 분석과 활성도 예측을 통해
+MMP13 억제 후보 화합물의 활성을 예측하고
+신약 후보의 우선순위를 평가하는 플랫폼입니다.
 </p>
 </div>
 """,
 unsafe_allow_html=True
 )
-st.markdown(
-"""
-<div class="card">
-<b>🔬 Research Goal</b>
-MMP13 관련 후보 화합물의 분자 구조 정보를 기반으로 Random Forest AI 모델이 예상 활성도(pIC50)를 예측하고  
-신약 후보 물질의 우선순위를 평가합니다.
-</div>
-""",
-unsafe_allow_html=True)
 
 
 # Model Info
