@@ -99,12 +99,17 @@ with st.sidebar:
     st.write(
 """
 Target
+
 🎯 MMP13
+
 Disease
-🩺 Breast Cancer
-Model
+
+🩺 Breast Cancer Model
+
 🤖 Random Forest Regression
+
 Output
+
 Predicted pIC50
 """
 )
