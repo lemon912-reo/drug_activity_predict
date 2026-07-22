@@ -266,8 +266,7 @@ best = result.iloc[0]
 st.markdown(
 f"""
 <div class="card">
-<h2>🧬 AI Screening Result</h2>
-<br>
+<h2>🧬 AI Screening Result</h2><br>
 가장 높은 활성도를 예측한 후보는
 <h3>{best['molecule_chembl_id']}</h3>
 예측 활성도
@@ -278,7 +277,8 @@ Random Forest 모델 분석 결과,
 가장 높은 활성을 보일 것으로 예측되었습니다.
 </div>
 """,
-unsafe_allow_html=True)
+unsafe_allow_html=True
+)
 
 # 다운로드 기능 
 # =====================================
