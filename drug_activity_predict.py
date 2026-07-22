@@ -5,6 +5,7 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 import matplotlib.pyplot as plt
+import base64
 
 # 페이지 설정 
 # =====================================
@@ -12,6 +13,9 @@ st.set_page_config(
     page_title="AI Drug Discovery",
     page_icon="🧬",
     layout="wide")
+
+with open("hero.jpg", "rb") as f:
+    hero_base64 = base64.b64encode(f.read()).decode()
 
 # CSS
 # =====================================
@@ -33,8 +37,8 @@ h2 {color:#0f766e;}
 # hero
 # =====================================
 /* Hero Banner */
-.hero {background:linear-gradient(90deg,rgba(7,89,133,0.9),rgba(15,118,110,0.85)),
-url("hero.jpg");
+.hero {{background:linear-gradient(90deg,rgba(7,89,133,0.9),rgba(15,118,110,0.85)),
+url("data:image/jpeg;base64,{hero_base64}");
 background-size:cover;
 background-position:center;
 padding:45px;
@@ -42,10 +46,10 @@ border-radius:25px;
 color:white;
 margin-bottom:25px;
 box-shadow:
-0px 10px 25px rgba(0,0,0,0.15);}
-.hero h1 {color:white;font-size:42px;}
-.hero h3 {color:#dbeafe;}
-.hero p {font-size:18px;}
+0px 10px 25px rgba(0,0,0,0.15);}}
+.hero h1 {{color:white;font-size:42px;}}
+.hero h3 {{color:#dbeafe;}}
+.hero p {{font-size:18px;}}
 /* 카드 */
 .card {background:linear-gradient(135deg,#ffffff,#f8fafc);
 padding:20px;
