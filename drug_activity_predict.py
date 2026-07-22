@@ -20,7 +20,7 @@ with open("hero.jpg", "rb") as f:
 # CSS
 # =====================================
 st.markdown(
-"""
+f"""
 <style>
 /* 전체 배경 */
 .stApp {
