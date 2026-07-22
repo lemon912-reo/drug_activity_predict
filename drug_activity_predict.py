@@ -290,17 +290,6 @@ Random Forest 모델 분석 결과,
 unsafe_allow_html=True
 )
 
-# 다운로드 기능 
-# =====================================
-csv = result.to_csv(index=False).encode("utf-8")
-st.download_button(
-    "📥 Download Prediction Result",
-    csv,
-    file_name="prediction_result.csv",
-    mime="text/csv"
-)
-
-
 
 
 
