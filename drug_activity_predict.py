@@ -17,7 +17,7 @@ st.set_page_config(
 # CSS
 # =====================================
 st.markdown(
-f"""
+"""
 <style>
 /* 전체 배경 */
 .stApp {background:linear-gradient(135deg,#f0f8fa,#ffffff);}
