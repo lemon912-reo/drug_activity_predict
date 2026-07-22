@@ -235,38 +235,6 @@ for i, row in enumerate(top5.itertuples()):
         )
         
 
-# =====================================
-# Visualization
-# =====================================
-<br>
-st.subheader("📊 Candidate Ranking Visualization")
-
-# Top 5 강조
-result["Highlight"] = result["Rank"].apply(
-    lambda x: "Top 5" if x <= 5 else "Others"
-)
-
-fig, ax = plt.subplots(figsize=(8,4))
-colors = [
-    "#0f766e" if r <= 5 else "#cbd5e1"
-    for r in result["Rank"]]
-bars = ax.bar(
-    result["Rank"],
-    result["Predicted_pIC50"],
-    color=colors)
-for bar in bars:
-    h = bar.get_height()
-    ax.text(
-        bar.get_x()+bar.get_width()/2,
-        h+0.05,
-        f"{h:.2f}",
-        ha="center",
-        fontsize=7)
-ax.set_xlabel("Candidate Rank")
-ax.set_ylabel("Predicted pIC50")
-ax.set_title("AI Predicted Activity")
-ax.grid(alpha=0.3)
-st.pyplot(fig)
 
 
 # =====================================
