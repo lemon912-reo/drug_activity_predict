@@ -5,6 +5,7 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 import matplotlib.pyplot as plt
+import os
 
 # 페이지 설정 
 # =====================================
