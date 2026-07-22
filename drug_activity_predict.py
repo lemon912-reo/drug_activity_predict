@@ -123,12 +123,16 @@ def recommendation(score):
 # 예측 함수
 # =====================================
 def predict_smiles(smiles):
+    if smiles is None:
+        return None
+    smiles = smiles.strip()
+    if smiles == "":
+        return None
     fp = smiles_to_fp(smiles)
     if fp is None:
         return None
     pred = rf_model.predict(np.array([fp]))[0]
-    return pred
-
+    return float(pred)
 
 # Predict New Molecule
 # =====================================
@@ -190,9 +194,40 @@ with tab2:
     smiles = st.text_area("SMILES를 입력하세요.")
     if st.button("Predict from SMILES"):
         score = predict_smiles(smiles)
-        grade = recommendation(score)
-        st.metric("Predicted pIC50", f"{score:.3f}")
-        st.success(grade)
+        if score is None:
+            st.error("❌ 올바른 SMILES 형식이 아닙니다.")
+            st.info("예시: CCO, C1=CC=CC=C1")
+        else:
+            grade = recommendation(score)
+            st.metric(
+                "Predicted pIC50",
+                f"{score:.3f}"
+            )
+            st.success(grade)
+            if score >= 8:
+                st.info("""
+🧬 **AI Interpretation**
+
+매우 높은 활성을 보일 것으로 예측되었습니다.
+
+우선적으로 실험 검증을 수행할 가치가 있는 후보입니다.
+""")
+            elif score >= 7:
+                st.info("""
+🧬 **AI Interpretation**
+
+활성이 기대되는 후보 화합물입니다.
+
+후속 실험을 권장합니다.
+""")
+            else:
+                st.info("""
+🧬 **AI Interpretation**
+
+현재 모델 기준에서는 우선순위가 낮은 후보입니다.
+
+추가적인 구조 최적화가 필요합니다.
+""")
 
 
 candidate["Predicted_pIC50"] = candidate["smiles"].apply(predict_smiles)
