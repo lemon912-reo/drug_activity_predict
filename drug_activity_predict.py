@@ -5,6 +5,7 @@ import joblib
 from rdkit import Chem
 from rdkit.Chem import rdFingerprintGenerator
 import matplotlib.pyplot as plt
+import base64
 
 # 페이지 설정 
 # =====================================
@@ -13,11 +14,13 @@ st.set_page_config(
     page_icon="🧬",
     layout="wide")
 
+with open("hero.jpg", "rb") as f:
+    hero_base64 = base64.b64encode(f.read()).decode("utf-8")
 
 # CSS
 # =====================================
 st.markdown(
-"""
+f"""
 <style>
 /* 전체 배경 */
 .stApp {background:linear-gradient(135deg,#f0f8fa,#ffffff);}
@@ -30,97 +33,58 @@ h2 {color:#0f766e;}
 /* Hero Banner */
 /* Hero */
 
+/* Hero Banner */
+
 .hero{
 
-position:relative;
+background:
+linear-gradient(
+90deg,
+rgba(7,89,133,0.82),
+rgba(15,118,110,0.70)
+),
 
-width:100%;
+url("data:image/jpeg;base64,{hero_base64}");
 
-height:380px;
+background-size:cover;
+
+background-position:center;
+
+padding:45px;
 
 border-radius:25px;
 
-overflow:hidden;
+color:white;
 
-margin-bottom:30px;
+margin-bottom:25px;
 
-box-shadow:0px 10px 30px rgba(0,0,0,0.18);
-
-}
-
-.hero img{
-
-width:100%;
-
-height:100%;
-
-object-fit:cover;
-
-display:block;
+box-shadow:0px 10px 25px rgba(0,0,0,0.15);
 
 }
 
-.hero-overlay{
+.hero h1{
 
-position:absolute;
+color:white;
 
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:linear-gradient(
-90deg,
-rgba(7,89,133,0.82),
-rgba(15,118,110,0.60)
-);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-padding-left:70px;
-
-padding-right:70px;
-
-}
-
-.hero-title{
-
-font-size:44px;
+font-size:42px;
 
 font-weight:800;
 
-color:white;
-
-margin-bottom:12px;
-
 }
 
-.hero-sub{
-
-font-size:22px;
+.hero h3{
 
 color:#dbeafe;
 
-margin-bottom:18px;
-
 }
 
-.hero-text{
+.hero p{
 
 font-size:18px;
 
-line-height:1.7;
-
-color:white;
-
 max-width:700px;
+
+line-height:1.6;
 
 }
 /* 카드 */
@@ -146,31 +110,19 @@ st.markdown(
 """
 <div class="hero">
 
-<img src="hero.jpg">
-
-<div class="hero-overlay">
-
-<div class="hero-title">
-
+<h1>
 🧬 AI 기반 신약 후보 물질 예측 시스템
+</h1>
 
-</div>
-
-<div class="hero-sub">
-
+<h3>
 MMP13 Target-based Breast Cancer Candidate Screening
+</h3>
 
-</div>
-
-<div class="hero-text">
-
-Random Forest 기반 AI 모델을 활용하여
-분자 구조(SMILES)로부터 활성도(pIC50)를 예측하고,
-MMP13 억제 후보 화합물의 우선순위를 평가합니다.
-
-</div>
-
-</div>
+<p>
+AI 기반 분자 구조 분석과 활성도 예측을 통해
+MMP13 억제 후보 화합물의 활성을 예측하고
+신약 후보의 우선순위를 평가하는 플랫폼입니다.
+</p>
 
 </div>
 """,
