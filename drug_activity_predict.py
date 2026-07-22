@@ -34,7 +34,7 @@ h2 {color:#0f766e;}
 # =====================================
 /* Hero Banner */
 .hero {background:linear-gradient(90deg,rgba(7,89,133,0.9),rgba(15,118,110,0.85)),
-url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69");
+url("hero.jpg");
 background-size:cover;
 background-position:center;
 padding:45px;
