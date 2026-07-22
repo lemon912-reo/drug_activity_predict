@@ -129,9 +129,6 @@ def predict_smiles(smiles):
     return pred
 
 
-
-
-
 # Predict New Molecule
 # =====================================
 st.subheader("🧪 Predict New Molecule")
@@ -209,22 +206,23 @@ st.dataframe(result,use_container_width=True,hide_index=True)
 st.subheader("⭐ Top 5 Candidate Molecules")
 cols = st.columns(5)
 top5 = result.head(5)
-for i, row in top5.iterrows():
+for i, row in enumerate(top5.itertuples()):
     with cols[i]:
-        image_path = f"images/{row['molecule_chembl_id']}.png"
-        st.image(image_path, use_container_width=True)
+        image_path = f"images/{row.molecule_chembl_id}.png"
+        if os.path.exists(image_path):
+            st.image(image_path, use_container_width=True)
         st.markdown(
         f"""
         <div class="card">
-        <b>🏆 Rank {row['Rank']}</b><br><br>
-        <b>{row['molecule_chembl_id']}</b>
-        <br>
+        <b>🏆 Rank {row.Rank}</b><br><br>
+        <b>{row.molecule_chembl_id}</b><br>
         pIC50
-        <h2>{row['Predicted_pIC50']:.3f}</h2>
-        {row['Recommendation']}
+        <h2>{row.Predicted_pIC50:.3f}</h2>
+        {row.Recommendation}
         </div>
         """,
-        unsafe_allow_html=True)
+        unsafe_allow_html=True
+        )
         
 
 # =====================================
