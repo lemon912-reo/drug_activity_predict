@@ -238,7 +238,7 @@ for i, row in enumerate(top5.itertuples()):
 # =====================================
 # Visualization
 # =====================================
-
+<br>
 st.subheader("📊 Candidate Ranking Visualization")
 
 # Top 5 강조
